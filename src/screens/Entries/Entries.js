@@ -37,12 +37,19 @@ const Entries = ({ navigation }) => {
         fetchMoods(symptomsData[0].name);
       }
     }
-    async function fetchMoods(symptomName) {
-      const moodData = await getMoodsBySymptom(symptomName);
-      setMoods(moodData);
-    }
     fetchSymptoms();
   }, []);
+
+  async function fetchMoods(symptomName) {
+    const moodData = await getMoodsBySymptom(symptomName);
+    setMoods(moodData);
+  }
+
+  useEffect(() => {
+    if (symptomsList.length > 0) {
+      fetchMoods(symptomsList[symptomIndex].name);
+    }
+  }, [symptomIndex, symptomsList]);
 
   const logout = () => {
     signOut();
