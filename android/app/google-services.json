@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "789405429320",
+    "firebase_url": "https://cbdcompanion.firebaseio.com",
+    "project_id": "cbdcompanion",
+    "storage_bucket": "cbdcompanion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789405429320:android:28f8822dfa42b4da2b727d",
+        "android_client_info": {
+          "package_name": "com.cbdcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789405429320-12djjoj7jc5v9sl8a4ui6q1lmdqs9sv2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cbdcompanion",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "789405429320-8nb6om0946dsjbbhp9ns2tdcn63bi3hv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhaObyq_NQ4PoeauavYhX2xba1gWbnRyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789405429320-8nb6om0946dsjbbhp9ns2tdcn63bi3hv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

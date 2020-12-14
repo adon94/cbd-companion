@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>789405429320-1n0pgj9o4u5jumujma3m7g9l84n5ja2k.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.789405429320-1n0pgj9o4u5jumujma3m7g9l84n5ja2k</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>789405429320-12djjoj7jc5v9sl8a4ui6q1lmdqs9sv2.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDufKUe8L1HVmNe3B9oiewlB1yqp8kHLKU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>789405429320</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.CbdCompanion</string>
+	<key>PROJECT_ID</key>
+	<string>cbdcompanion</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cbdcompanion.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:789405429320:ios:fa721aa5f7cd67552b727d</string>
+	<key>DATABASE_URL</key>
+	<string>https://cbdcompanion.firebaseio.com</string>
+</dict>
+</plist>
