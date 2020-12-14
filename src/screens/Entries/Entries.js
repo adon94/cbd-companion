@@ -2,8 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   StyleSheet,
   Animated,
-  Text,
-  View,
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
@@ -20,7 +18,7 @@ import SelectSymptom from './SelectSymptom';
 
 const screenWidth = Dimensions.get('window').width;
 
-const HEADER_MAX_HEIGHT = 250;
+const HEADER_MAX_HEIGHT = 210;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
@@ -87,7 +85,6 @@ const Entries = ({ navigation }) => {
         <Animated.View
           style={[
             {
-              // backgroundColor: 'blue',
               transform: [{ translateX: titleTranslateX }],
             },
           ]}>
@@ -150,6 +147,7 @@ const styles = StyleSheet.create({
     right: 0,
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT,
+    zIndex: 100,
   },
   title: {
     color: '#fff',
@@ -158,7 +156,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   flatList: {
-    paddingTop: HEADER_MAX_HEIGHT,
+    paddingTop: HEADER_MAX_HEIGHT + 25,
   },
 });
 
