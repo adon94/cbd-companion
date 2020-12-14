@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
-import { AreaChart, Grid, YAxis, LineChart } from 'react-native-svg-charts';
+import { AreaChart, Grid, YAxis, XAxis } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { Circle, Path } from 'react-native-svg';
 import { timeDisplay } from '../../../core/utils';
@@ -48,6 +48,8 @@ const Stats = ({ moods }) => {
   };
   const data = moods.map((mood) => mood.rating);
   const contentInset = { top: 20, bottom: 20 };
+  const xAxisHeight = 30;
+  const xAxisData = moods.map((mood) => timeDisplay(mood.timestamp));
 
   return (
     <View style={styles.container}>
@@ -62,31 +64,34 @@ const Stats = ({ moods }) => {
             }}
             numberOfTicks={4}
             formatLabel={formatLabel}
+            style={{ marginBottom: xAxisHeight }}
           />
-          {/* <LineChart
-            yMax={4}
-            yMin={1}
-            numberOfTicks={4}
-            style={{ flex: 1, marginLeft: 16 }}
-            data={data}
-            curve={shape.curveNatural}
-            svg={{ stroke: theme.colors.primary }}
-            contentInset={contentInset}>
-            <Decorator />
-          </LineChart> */}
-          <AreaChart
-            yMax={4}
-            yMin={1}
-            numberOfTicks={4}
-            style={{ flex: 1, marginLeft: 16 }}
-            data={data}
-            contentInset={contentInset}
-            curve={shape.curveNatural}
-            svg={{ fill: '#f0f0f04D' }}>
-            <Grid svg={{ stroke: '#ffffff4D' }} />
-            <Line />
-            <Decorator />
-          </AreaChart>
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <AreaChart
+              yMax={4}
+              yMin={1}
+              numberOfTicks={4}
+              style={{ flex: 1 }}
+              data={data}
+              contentInset={contentInset}
+              curve={shape.curveNatural}
+              svg={{ fill: '#f0f0f04D' }}>
+              <Grid svg={{ stroke: '#ffffff4D' }} />
+              <Line />
+              <Decorator />
+            </AreaChart>
+            <XAxis
+              style={{
+                marginHorizontal: -10,
+                height: xAxisHeight,
+                paddingTop: 10,
+              }}
+              data={xAxisData}
+              formatLabel={(index) => xAxisData[index]}
+              contentInset={{ left: 30, right: 30 }}
+              svg={{ fontSize: 10, fill: '#fff' }}
+            />
+          </View>
         </View>
       )}
     </View>
