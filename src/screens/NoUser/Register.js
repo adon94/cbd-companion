@@ -48,7 +48,7 @@ const Register = ({ navigation }) => {
         <Header>Create Account</Header>
 
         <TextInput
-          label="Name"
+          placeholder="Name"
           returnKeyType="next"
           value={name.value}
           onChangeText={(text) => setName({ value: text, error: '' })}
@@ -57,7 +57,7 @@ const Register = ({ navigation }) => {
         />
 
         <TextInput
-          label="Email"
+          placeholder="Email"
           returnKeyType="next"
           value={email.value}
           onChangeText={(text) => setEmail({ value: text, error: '' })}

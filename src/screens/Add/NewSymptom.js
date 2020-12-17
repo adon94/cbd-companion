@@ -26,7 +26,7 @@ const NewSymptom = ({ navigation }) => {
         <Text style={styles.heading}>Track a new symptom</Text>
         <View>
           <TextInput
-            label="Symptom name"
+            placeholder="Symptom name"
             returnKeyType="done"
             value={name.value}
             onChangeText={(text) => setName({ value: text, error: '' })}

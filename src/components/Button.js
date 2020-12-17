@@ -3,13 +3,14 @@ import { StyleSheet } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 
-const Button = ({ mode, style, children, ...props }) => (
+const Button = ({ mode, style, fullWidth, children, ...props }) => (
   <PaperButton
     style={[
       styles.button,
       mode === 'outlined'
         ? { backgroundColor: theme.colors.surface }
         : { backgroundColor: theme.colors.backdrop },
+      fullWidth && styles.fullWidth,
       style,
     ]}
     labelStyle={[
@@ -23,8 +24,10 @@ const Button = ({ mode, style, children, ...props }) => (
 );
 
 const styles = StyleSheet.create({
-  button: {
+  fullWidth: {
     width: '100%',
+  },
+  button: {
     marginVertical: 10,
   },
   text: {

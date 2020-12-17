@@ -40,7 +40,7 @@ const Login = ({ navigation }) => {
         <Header>Welcome back.</Header>
 
         <TextInput
-          label="Email"
+          placeholder="Email"
           returnKeyType="next"
           value={email.value}
           onChangeText={(text) => setEmail({ value: text, error: '' })}
@@ -53,7 +53,7 @@ const Login = ({ navigation }) => {
         />
 
         <TextInput
-          label="Password"
+          placeholder="Password"
           returnKeyType="done"
           value={password.value}
           onChangeText={(text) => setPassword({ value: text, error: '' })}

@@ -136,6 +136,38 @@ async function getMoodsBySymptomOnDay(symptomName, date) {
     });
 }
 
+async function addOnboardInfo(symptoms, cbdDetails) {
+  const user = auth().currentUser;
+
+  const batch = firestore().batch();
+
+  const userRef = usersRef.doc(user.uid);
+
+  batch.set(userRef, { ...cbdDetails, onboarded: true });
+
+  symptoms.forEach((symptom) => {
+    const symptomsRef = userRef.collection('symptoms').doc(symptom);
+
+    batch.set(symptomsRef, {
+      name: symptom,
+    });
+  });
+
+  await batch.commit();
+}
+
+async function isOnboarded() {
+  const user = auth().currentUser;
+  if (user) {
+    return await usersRef
+      .doc(user.uid)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.data();
+      });
+  }
+}
+
 async function addSymptom(symptom) {
   const user = auth().currentUser;
   await usersRef.doc(user.uid).collection('symptoms').doc(symptom).set({
@@ -166,4 +198,6 @@ export {
   addSymptom,
   getSymptoms,
   getMoodsBySymptomOnDay,
+  addOnboardInfo,
+  isOnboarded,
 };

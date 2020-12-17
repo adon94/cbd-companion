@@ -6,7 +6,7 @@ import Button from '../../components/Button';
 import Paragraph from '../../components/Paragraph';
 
 const PreLogin = ({ navigation }) => (
-  <Layout container>
+  <Layout container centered>
     <Logo />
     <Header>Buddy</Header>
 

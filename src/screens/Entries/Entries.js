@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -16,6 +18,7 @@ import Layout from '../../components/Layout';
 import EntryItem from './EntryItem';
 import SelectSymptom from './SelectSymptom';
 
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
 
 const HEADER_MAX_HEIGHT = 210;
@@ -135,7 +138,7 @@ const Entries = ({ navigation }) => {
 const styles = StyleSheet.create({
   settingsButton: {
     position: 'absolute',
-    top: 0,
+    top: 40,
     right: 0,
     alignSelf: 'flex-end',
     margin: 20,
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
     marginTop: HEADER_MIN_HEIGHT,
   },
   headerContainer: {
-    marginTop: 85,
+    marginTop: 85 + STATUS_BAR_HEIGHT,
     paddingHorizontal: 20,
     position: 'absolute',
     top: 0,

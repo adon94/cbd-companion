@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +9,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 
 import { StateProvider } from './src/core/store';
 import theme from './src/core/theme';
+import { isOnboarded } from './src/api/database';
 
 import Login from './src/screens/NoUser/Login';
 import Register from './src/screens/NoUser/Register';
@@ -15,6 +17,7 @@ import PreLogin from './src/screens/NoUser/PreLogin';
 import Add from './src/screens/Add';
 import Stats from './src/screens/Stats';
 import Entries from './src/screens/Entries';
+import Onboarding from './src/screens/Onboarding';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,11 +34,18 @@ const App = () => {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [onboarded, setOnboarded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   // Handle user state changes
-  function onAuthStateChanged(newUser) {
+  async function onAuthStateChanged(newUser) {
     setUser(newUser);
     if (initializing) setInitializing(false);
+    const userInfo = await isOnboarded();
+    if (userInfo.onboarded) {
+      setOnboarded(true);
+    }
+    setLoaded(true);
   }
 
   useEffect(() => {
@@ -59,9 +69,16 @@ const App = () => {
     );
   }
 
+  if (!onboarded && loaded) {
+    return <Onboarding setOnboarded={setOnboarded} />;
+  }
+
   return (
     <Providers>
+      {/* <SafeAreaView style={{ flex: 1, backgroundColor: '#56ab2f' }}> */}
       <Tab.Navigator
+        // style={{ flex: 1, height: '100%' }}
+        initialRouteName="Add"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -84,11 +101,12 @@ const App = () => {
           inactiveBackgroundColor: '#ffffff',
           showLabel: false,
         }}
-        headerMode="none">
+        headerMode="screen">
         <Tab.Screen name="Entries" component={Entries} />
         <Tab.Screen name="Add" component={Add} />
         <Tab.Screen name="Stats" component={Stats} />
       </Tab.Navigator>
+      {/* </SafeAreaView> */}
     </Providers>
   );
 };

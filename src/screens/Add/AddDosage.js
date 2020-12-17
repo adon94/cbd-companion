@@ -7,7 +7,6 @@ import {
   Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CheckBox from '@react-native-community/checkbox';
 
 import { store } from '../../core/store';
 import { timeDisplay } from '../../core/utils';
@@ -16,7 +15,7 @@ import Layout from '../../components/Layout';
 import { ADD_DOSAGE } from '../../core/store';
 import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
-import { theme } from '../../core/theme';
+import CheckboxInput from '../../components/CheckboxInput';
 
 const AddDosage = ({ navigation }) => {
   const globalState = useContext(store);
@@ -69,17 +68,9 @@ const AddDosage = ({ navigation }) => {
               {show ? 'Done' : timeDisplay(dosage.timestamp)}
             </Text>
           </TouchableOpacity>
-          <View style={styles.checkboxContainer}>
-            <CheckBox
-              tintColor="#f0f0f04D"
-              onCheckColor="#ffffff"
-              onTintColor="#ffffff"
-              disabled={false}
-              value={checked}
-              onValueChange={(newValue) => setChecked(newValue)}
-            />
-            <Text style={styles.checkboxText}>Just for today</Text>
-          </View>
+          <CheckboxInput checked={checked} setChecked={setChecked}>
+            Set reminder to this time
+          </CheckboxInput>
         </View>
         <Button onPress={() => submit()}>
           <Text style={styles.buttonText}>Next</Text>
@@ -107,16 +98,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f04D',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  checkboxText: {
-    marginLeft: 10,
-    color: '#ffffff',
-    fontSize: 20,
   },
   buttonText: {
     color: '#ffffff',

@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const topColor = '#56ab2f';
 const bottomColor = '#a8e063';
 
-const Layout = ({ children, container }) => {
+const Layout = ({ children, container, style, centered }) => {
   return (
     <>
       <StatusBar
@@ -13,13 +13,16 @@ const Layout = ({ children, container }) => {
         backgroundColor={topColor}
         barStyle="dark-content"
       />
-      <SafeAreaView style={styles.body}>
-        <LinearGradient
-          colors={[topColor, bottomColor]}
-          style={[styles.linearGradient, container && styles.container]}>
-          {children}
-        </LinearGradient>
-      </SafeAreaView>
+      <LinearGradient
+        colors={[topColor, bottomColor]}
+        style={[
+          styles.linearGradient,
+          style && style,
+          container && styles.container,
+          centered && styles.centered,
+        ]}>
+        <SafeAreaView style={styles.body}>{children}</SafeAreaView>
+      </LinearGradient>
     </>
   );
 };
@@ -32,8 +35,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    flex: 1,
     padding: 20,
+  },
+  centered: {
     alignItems: 'center',
     justifyContent: 'center',
   },
