@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 
 import Layout from '../../components/Layout';
@@ -52,12 +52,12 @@ const Onboarding = ({ setOnboarded }) => {
   return (
     <View style={styles.full}>
       <ViewPager initialPage={0} ref={pagerRef} style={styles.full}>
-        <View key="1">
-          <Layout>
-            <View style={styles.container}>
+        <View style={styles.full} key="1">
+          <Layout noSafeView>
+            <SafeAreaView style={styles.container}>
               <Header>What would you like to improve?</Header>
               <SymptomInput symptoms={symptoms} setSymptoms={setSymptoms} />
-            </View>
+            </SafeAreaView>
             <Footer
               backgroundColor={theme.colors.primary}
               rightButtonLabel="Next"
@@ -65,15 +65,15 @@ const Onboarding = ({ setOnboarded }) => {
             />
           </Layout>
         </View>
-        <View key="2">
-          <Layout>
-            <View style={styles.container}>
+        <View style={styles.full} key="2">
+          <Layout noSafeView>
+            <SafeAreaView style={styles.container}>
               <Header>What CBD are you taking?</Header>
               <CbdDetails
                 cbdDetails={cbdDetails}
                 setCbdDetails={setCbdDetails}
               />
-            </View>
+            </SafeAreaView>
             <Footer
               backgroundColor={theme.colors.primary}
               leftButtonLabel="Back"
@@ -93,12 +93,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    padding: 20,
+    margin: 20,
+    marginTop: 80,
     flex: 1,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });
 

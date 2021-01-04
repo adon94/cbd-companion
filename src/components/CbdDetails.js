@@ -5,11 +5,6 @@ import TextInput from '../components/TextInput';
 import CheckboxInput from '../components/CheckboxInput';
 
 const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
-  const [name, setName] = useState({ value: 'Leafy', error: '' });
-  const [concentration, setConcentration] = useState({
-    value: '500',
-    error: '',
-  });
   const [unavailable, setUnavailable] = useState(false);
 
   return (
@@ -23,7 +18,7 @@ const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
         }
         autoCapitalize="words"
         autoCompleteType="off"
-        editable={!unavailable}
+        disabled={unavailable}
       />
       <View style={styles.mgContainer}>
         <TextInput
@@ -33,7 +28,7 @@ const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
           onChangeText={(text) => setCbdDetails({ ...cbdDetails, mg: text })}
           keyboardType="numeric"
           autoCompleteType="off"
-          editable={!unavailable}
+          disabled={unavailable}
           width={200}
         />
         <Text style={styles.mgText}>mg</Text>

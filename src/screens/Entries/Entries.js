@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   StatusBar,
+  Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -115,6 +116,7 @@ const Entries = ({ navigation }) => {
       </Animated.View>
       <SafeAreaView style={styles.container}>
         <Animated.FlatList
+          ListHeaderComponent={() => <Text>This week graph</Text>}
           data={moods}
           renderItem={({ item }) => (
             <EntryItem

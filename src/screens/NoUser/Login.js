@@ -35,9 +35,10 @@ const Login = ({ navigation }) => {
       <KeyboardAvoiding container>
         <BackButton onPress={() => navigation.goBack()} />
 
-        <Logo />
-
-        <Header>Welcome back.</Header>
+        <View style={styles.headerContainer}>
+          <Logo />
+          <Header>Welcome back</Header>
+        </View>
 
         <TextInput
           placeholder="Email"
@@ -85,6 +86,9 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    alignItems: 'center',
+  },
   forgotPassword: {
     width: '100%',
     alignItems: 'flex-end',

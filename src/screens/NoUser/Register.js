@@ -42,10 +42,10 @@ const Register = ({ navigation }) => {
     <Layout>
       <KeyboardAvoiding container>
         <BackButton onPress={() => navigation.goBack()} />
-
-        <Logo />
-
-        <Header>Create Account</Header>
+        <View style={styles.headerContainer}>
+          <Logo />
+          <Header>Create Account</Header>
+        </View>
 
         <TextInput
           placeholder="Name"
@@ -70,7 +70,7 @@ const Register = ({ navigation }) => {
         />
 
         <TextInput
-          label="Password"
+          placeholder="Password"
           returnKeyType="done"
           value={password.value}
           onChangeText={(text) => setPassword({ value: text, error: '' })}
@@ -98,6 +98,9 @@ const Register = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    alignItems: 'center',
+  },
   label: {
     color: theme.colors.label,
     fontSize: 16,

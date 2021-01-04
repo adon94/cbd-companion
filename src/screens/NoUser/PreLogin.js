@@ -19,15 +19,14 @@ const PreLogin = ({ navigation }) => (
       Login
     </Button>
     <Button mode="outlined" onPress={() => navigation.navigate('Register')}>
-      Sign Up
+      Register
     </Button>
   </Layout>
 );
 
 const styles = StyleSheet.create({
   layoutContainer: {
-    justifyContent: 'flex-end',
-    backgroundColor: 'blue',
+    justifyContent: 'center',
     height: screenHeight,
   },
 });

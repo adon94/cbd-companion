@@ -6,7 +6,7 @@ import { theme } from '../core/theme';
 const TextInput = ({ errorText, ...props }) => (
   <View style={styles.container}>
     <Input
-      style={[styles.input, !props.editable && styles.disabled]}
+      style={[styles.input, props.disabled && styles.disabled]}
       selectionColor={theme.colors.primary}
       {...props}
     />
