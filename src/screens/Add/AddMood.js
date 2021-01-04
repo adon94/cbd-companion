@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, FlatList, Text, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  Dimensions,
+  Platform,
+} from 'react-native';
 
 import Layout from '../../components/Layout';
 import BackButton from '../../components/BackButton';
@@ -11,6 +18,8 @@ import ListFooter from '../../components/AddMoodScreen/ListFooter';
 import { store } from '../../core/store';
 import { getSymptoms, addMood } from '../../api/database';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const isIos = Platform.OS === 'ios';
 
 const feels = ['😓', '😕', '🙂', '😁'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
@@ -100,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingBottom: 0,
-    marginTop: 85,
+    marginTop: isIos ? 85 : 20,
     marginBottom: 20,
   },
   smallTitle: {
@@ -111,7 +120,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: '#fff',
-    fontSize: 50,
+    fontSize: isIos ? 50 : 35,
     fontWeight: 'bold',
   },
   flatList: {

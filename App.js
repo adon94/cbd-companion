@@ -42,7 +42,7 @@ const App = () => {
     setUser(newUser);
     if (initializing) setInitializing(false);
     const userInfo = await isOnboarded();
-    if (userInfo.onboarded) {
+    if (userInfo && userInfo.onboarded) {
       setOnboarded(true);
     }
     setLoaded(true);

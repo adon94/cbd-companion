@@ -11,15 +11,15 @@ const Layout = ({ children, container, style, centered }) => {
       <StatusBar
         translucent
         backgroundColor={topColor}
-        barStyle="dark-content"
+        barStyle="light-content"
       />
       <LinearGradient
         colors={[topColor, bottomColor]}
         style={[
           styles.linearGradient,
-          style && style,
           container && styles.container,
           centered && styles.centered,
+          style && style,
         ]}>
         <SafeAreaView style={styles.body}>{children}</SafeAreaView>
       </LinearGradient>
