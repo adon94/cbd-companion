@@ -35,7 +35,7 @@ export const dateDisplay = (timestamp) => {
     day: 'numeric',
   };
 
-  return new Date(timestamp).toLocaleDateString('en-US', options);
+  return new Date(timestamp).toLocaleDateString('en-GB', options);
 };
 
 export const timeDisplay = (timestamp) => {
@@ -45,4 +45,9 @@ export const timeDisplay = (timestamp) => {
   };
 
   return new Date(timestamp).toLocaleTimeString('en-US', options);
+};
+
+export const getDayName = (dateStr, locale) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(locale, { weekday: 'short' });
 };

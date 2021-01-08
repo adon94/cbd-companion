@@ -69,7 +69,7 @@ const AddDosage = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           <CheckboxInput checked={checked} setChecked={setChecked}>
-            Set reminder to this time
+            Set daily reminder to this time
           </CheckboxInput>
         </View>
         <Button onPress={() => submit()}>

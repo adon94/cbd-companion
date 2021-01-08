@@ -16,7 +16,7 @@ const HEADER_MIN_HEIGHT = 120;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const EntryScreen = ({ route: { params: item }, navigation }) => {
-  const average = Math.round(item.average);
+  const average = Math.round(item.rating);
   const emojis = ['😓', '😓', '😕', '🙂', '😁'];
   const [moods, setMoods] = useState([]);
   const [titleWidth, setTitleWidth] = useState(0);

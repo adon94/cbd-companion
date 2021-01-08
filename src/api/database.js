@@ -71,7 +71,7 @@ async function addMood(symptoms) {
           .doc(today);
 
         batch2.set(ref, {
-          average: totalRating / todaysMoods.size,
+          rating: totalRating / todaysMoods.size,
           date: today,
         });
       });

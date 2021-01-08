@@ -1,27 +1,10 @@
 import React from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { AreaChart, Grid, YAxis, XAxis } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { Circle, Path } from 'react-native-svg';
-import { timeDisplay } from '../../../core/utils';
+import { getDayName, timeDisplay } from '../../../core/utils';
 import { theme } from '../../../core/theme';
-
-const chartConfig = {
-  backgroundColor: '#ffffff',
-  backgroundGradientFrom: '#ffffff',
-  backgroundGradientTo: '#ffffff',
-  decimalPlaces: 2, // optional, defaults to 2dp
-  color: (opacity = 1) => `rgba(86, 171, 47, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(86, 171, 47, ${opacity})`,
-  style: {
-    borderRadius: 16,
-  },
-  propsForDots: {
-    r: '6',
-    strokeWidth: '2',
-    stroke: '#a4de8a',
-  },
-};
 
 const emojis = ['😓', '😓', '😕', '🙂', '😁'];
 
@@ -42,14 +25,16 @@ const Line = ({ line }) => (
   <Path d={line} stroke={theme.colors.primary} fill={'none'} />
 );
 
-const Stats = ({ moods }) => {
+const Stats = ({ moods, average }) => {
   const formatLabel = (y) => {
     return y % 1 === 0 && y < 5 ? emojis[parseInt(y, 10)] : '';
   };
-  const data = moods.map((mood) => mood.rating);
+  const data = moods.map((mood) => mood.rating); // dont forget
   const contentInset = { top: 20, bottom: 20 };
   const xAxisHeight = 30;
-  const xAxisData = moods.map((mood) => timeDisplay(mood.timestamp));
+  const xAxisData = average
+    ? moods.map((mood) => getDayName(mood.date)) // dateDisplay(mood.date, 'short'))
+    : moods.map((mood) => timeDisplay(mood.timestamp)); // also this
 
   return (
     <View style={styles.container}>
@@ -88,7 +73,7 @@ const Stats = ({ moods }) => {
               }}
               data={xAxisData}
               formatLabel={(index) => xAxisData[index]}
-              contentInset={{ left: 30, right: 30 }}
+              contentInset={{ left: 25, right: 25 }}
               svg={{ fontSize: 10, fill: '#fff' }}
             />
           </View>

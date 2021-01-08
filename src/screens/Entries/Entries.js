@@ -7,7 +7,6 @@ import {
   Dimensions,
   Platform,
   StatusBar,
-  Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -18,6 +17,7 @@ import Layout from '../../components/Layout';
 
 import EntryItem from './EntryItem';
 import SelectSymptom from './SelectSymptom';
+import HomeGraph from './HomeGraph';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
@@ -69,7 +69,7 @@ const Entries = ({ navigation }) => {
   // change header title y-axis
   const titleTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, -235],
+    outputRange: [0, -215],
     extrapolate: 'clamp',
   });
   const titleTranslateX = scrollY.interpolate({
@@ -116,7 +116,7 @@ const Entries = ({ navigation }) => {
       </Animated.View>
       <SafeAreaView style={styles.container}>
         <Animated.FlatList
-          ListHeaderComponent={() => <Text>This week graph</Text>}
+          ListHeaderComponent={() => <HomeGraph moods={moods} />}
           data={moods}
           renderItem={({ item }) => (
             <EntryItem

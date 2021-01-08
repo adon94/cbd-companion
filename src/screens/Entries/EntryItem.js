@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { dateDisplay, timeDisplay } from '../../core/utils';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
-  const rating = navigation ? Math.round(item.average) : item.rating;
+  const rating = Math.round(item.rating);
   const dateTime = navigation
     ? dateDisplay(item.date)
     : timeDisplay(item.timestamp);
