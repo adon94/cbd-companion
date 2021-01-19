@@ -21,7 +21,7 @@ const HomeGraph = ({ moods }) => {
 
   return (
     <View>
-      <Text style={styles.titleText}>This week</Text>
+      <Text style={styles.titleText}>{thisWeek.length > 0 ? 'This week' : 'No entries this week'}</Text>
       <Stats moods={thisWeek.reverse()} average />
     </View>
   );

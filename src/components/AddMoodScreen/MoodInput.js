@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   symptomText: {
     color: '#fff',
-    fontSize: 25,
+    fontSize: windowWidth / 17,
     fontWeight: 'bold',
   },
   boxesContainer: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   feelText: {
     color: '#ffffff',
-    fontSize: 70,
+    fontSize: windowWidth / 6,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 25,

@@ -5,8 +5,7 @@ import * as shape from 'd3-shape';
 import { Circle, Path } from 'react-native-svg';
 import { getDayName, timeDisplay } from '../../../core/utils';
 import { theme } from '../../../core/theme';
-
-const emojis = ['😓', '😓', '😕', '🙂', '😁'];
+import { ratingReps } from '../../../core/constants';
 
 const Decorator = ({ x, y, data }) => {
   return data.map((value, index) => (
@@ -27,7 +26,7 @@ const Line = ({ line }) => (
 
 const Stats = ({ moods, average }) => {
   const formatLabel = (y) => {
-    return y % 1 === 0 && y < 5 ? emojis[parseInt(y, 10)] : '';
+    return y % 1 === 0 && y < 5 ? ratingReps[parseInt(y, 10) - 1] : '';
   };
   const data = moods.map((mood) => mood.rating); // dont forget
   const contentInset = { top: 20, bottom: 20 };
@@ -44,7 +43,7 @@ const Stats = ({ moods, average }) => {
             data={[1, 2, 3, 4]}
             contentInset={contentInset}
             svg={{
-              fill: 'grey',
+              fill: theme.colors.accent,
               fontSize: 20,
             }}
             numberOfTicks={4}

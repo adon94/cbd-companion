@@ -68,6 +68,21 @@ const Onboarding = ({ setOnboarded }) => {
         <View style={styles.full} key="2">
           <Layout noSafeView>
             <SafeAreaView style={styles.container}>
+              <Header>Notifications?</Header>
+              {/* Enable notifications */}
+            </SafeAreaView>
+            <Footer
+              backgroundColor={theme.colors.primary}
+              leftButtonLabel="Back"
+              leftButtonPress={() => handlePageChange(0)}
+              rightButtonLabel="Next"
+              rightButtonPress={() => handlePageChange(2)}
+            />
+          </Layout>
+        </View>
+        <View style={styles.full} key="3">
+          <Layout noSafeView>
+            <SafeAreaView style={styles.container}>
               <Header>What CBD are you taking?</Header>
               <CbdDetails
                 cbdDetails={cbdDetails}
@@ -77,7 +92,7 @@ const Onboarding = ({ setOnboarded }) => {
             <Footer
               backgroundColor={theme.colors.primary}
               leftButtonLabel="Back"
-              leftButtonPress={() => handlePageChange(0)}
+              leftButtonPress={() => handlePageChange(1)}
               rightButtonLabel="Continue"
               rightButtonPress={submit}
             />

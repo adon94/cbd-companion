@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../core/theme';
+
+const windowWidth = Dimensions.get('window').width;
 
 const Button = ({ mode, style, fullWidth, children, ...props }) => (
   <PaperButton
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#ffffff',
-    fontSize: 20,
+    fontSize: windowWidth / 20,
     fontWeight: 'bold',
     textAlign: 'center',
   },

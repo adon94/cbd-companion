@@ -21,6 +21,9 @@ import HomeGraph from './HomeGraph';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
+console.log(screenHeight);
 
 const HEADER_MAX_HEIGHT = 210;
 const HEADER_MIN_HEIGHT = 60;
@@ -31,6 +34,7 @@ const Entries = ({ navigation }) => {
   const [symptomsList, setSymptomsList] = useState([]);
   const [symptomIndex, setSymptomIndex] = useState(0);
   const [titleWidth, setTitleWidth] = useState(0);
+  const [headingHeight, setHeadingHeight] = useState(0);
 
   useEffect(() => {
     async function fetchSymptoms() {
@@ -69,7 +73,7 @@ const Entries = ({ navigation }) => {
   // change header title y-axis
   const titleTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, -215],
+    outputRange: [0, -headingHeight],
     extrapolate: 'clamp',
   });
   const titleTranslateX = scrollY.interpolate({
@@ -89,7 +93,13 @@ const Entries = ({ navigation }) => {
           {
             transform: [{ translateY: titleTranslateY }],
           },
-        ]}>
+        ]}
+        onLayout={(e) => {
+          if (headingHeight === 0) {
+            console.log(e.nativeEvent.layout.height);
+            setHeadingHeight(e.nativeEvent.layout.height);
+          }
+        }}>
         <Animated.Text style={[styles.title, { opacity: headerOpacity }]}>
           My CBD Journey
         </Animated.Text>
@@ -140,18 +150,17 @@ const Entries = ({ navigation }) => {
 const styles = StyleSheet.create({
   settingsButton: {
     position: 'absolute',
-    top: 40,
+    top: screenHeight / 33,
     right: 0,
     alignSelf: 'flex-end',
     margin: 20,
   },
   container: {
     flex: 1,
-    paddingHorizontal: 20,
     marginTop: HEADER_MIN_HEIGHT,
   },
   headerContainer: {
-    marginTop: 85 + STATUS_BAR_HEIGHT,
+    marginTop: screenHeight / 10.5 + STATUS_BAR_HEIGHT,
     paddingHorizontal: 20,
     position: 'absolute',
     top: 0,
@@ -169,6 +178,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingTop: HEADER_MAX_HEIGHT + 25,
+    paddingHorizontal: 20,
   },
 });
 

@@ -11,6 +11,7 @@ import {
 import Layout from '../../components/Layout';
 import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
+import Title from '../../components/Title';
 
 import MoodInput from '../../components/AddMoodScreen/MoodInput';
 import ListFooter from '../../components/AddMoodScreen/ListFooter';
@@ -18,12 +19,16 @@ import ListFooter from '../../components/AddMoodScreen/ListFooter';
 import { store } from '../../core/store';
 import { getSymptoms, addMood } from '../../api/database';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Header from '../../components/Header';
 
 const isIos = Platform.OS === 'ios';
 
-const feels = ['😓', '😕', '🙂', '😁'];
+const feels = ['1', '2', '3', '4'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+console.log(windowHeight);
 
 const AddMood = ({ route, navigation }) => {
   const [symptoms, setSymptoms] = useState([]);
@@ -70,10 +75,10 @@ const AddMood = ({ route, navigation }) => {
       {beforeDose && <BackButton onPress={() => navigation.goBack()} />}
       <View style={styles.container}>
         <TouchableOpacity onPress={() => navigation.navigate('AddDosage')}>
-          <Text style={styles.smallTitle}>16mg dosage at 9:00am</Text>
-          <Text style={styles.smallTitle}>(Tap to change)</Text>
+          <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
+          <Title style={styles.smallTitle}>(Tap to change)</Title>
         </TouchableOpacity>
-        <Text style={styles.heading}>{prompt}</Text>
+        <Header lg>{prompt}</Header>
         {symptoms && symptoms.length > 0 ? (
           <FlatList
             data={symptoms}
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingBottom: 0,
-    marginTop: isIos ? 85 : 20,
+    marginTop: isIos && windowHeight > 700 ? windowHeight / 15 : 0,
     marginBottom: 20,
   },
   smallTitle: {
@@ -117,11 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     opacity: 0.8,
-  },
-  heading: {
-    color: '#fff',
-    fontSize: isIos ? 50 : 35,
-    fontWeight: 'bold',
   },
   flatList: {
     alignItems: 'flex-end',

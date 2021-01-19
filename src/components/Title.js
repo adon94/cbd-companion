@@ -4,25 +4,20 @@ import { theme } from '../core/theme';
 
 const windowWidth = Dimensions.get('window').width;
 
-const Header = ({ children, centered, lg }) => (
-  <Text
-    style={[styles.header, centered && styles.centered, lg && styles.large]}>
-    {children}
-  </Text>
+const Title = ({ children, centered }) => (
+  <Text style={[styles.title, centered && styles.centered]}>{children}</Text>
 );
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: windowWidth / 10,
+  title: {
+    fontSize: windowWidth / 23,
     color: theme.colors.accent,
     fontWeight: 'bold',
+    opacity: 0.6,
   },
   centered: {
     textAlign: 'center',
   },
-  large: {
-    fontSize: windowWidth / 8,
-  },
 });
 
-export default memo(Header);
+export default memo(Title);

@@ -1,16 +1,16 @@
 import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { signIn } from '../../api/auth';
 
 import Layout from '../../components/Layout';
 import KeyboardAvoiding from '../../components/KeyboardAvoiding';
-import Logo from '../../components/Logo';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 import BackButton from '../../components/BackButton';
-import { theme } from '../../core/theme';
+import Label from '../../components/Label';
+
 import { emailValidator, passwordValidator } from '../../core/utils';
 
 const Login = ({ navigation }) => {
@@ -36,8 +36,8 @@ const Login = ({ navigation }) => {
         <BackButton onPress={() => navigation.goBack()} />
 
         <View style={styles.headerContainer}>
-          <Logo />
-          <Header>Welcome back</Header>
+          {/* <Logo /> */}
+          <Header centered>Welcome back</Header>
         </View>
 
         <TextInput
@@ -64,10 +64,9 @@ const Login = ({ navigation }) => {
         />
 
         <View style={styles.forgotPassword}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.label}>Forgot your password?</Text>
-          </TouchableOpacity>
+          <Label onPress={() => navigation.navigate('ForgotPassword')}>
+            Forgot your password?
+          </Label>
         </View>
 
         <Button mode="contained" onPress={_onLoginPressed}>
@@ -75,10 +74,8 @@ const Login = ({ navigation }) => {
         </Button>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Don’t have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.link}>Sign up</Text>
-          </TouchableOpacity>
+          <Label>Don’t have an account? </Label>
+          <Label onPress={() => navigation.navigate('Register')}>Sign up</Label>
         </View>
       </KeyboardAvoiding>
     </Layout>
@@ -97,15 +94,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginTop: 4,
-  },
-  label: {
-    color: theme.colors.label,
-    fontSize: 16,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-    fontSize: 16,
   },
 });
 

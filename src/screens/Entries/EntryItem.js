@@ -1,19 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { theme } from '../../core/theme';
 import { dateDisplay, timeDisplay } from '../../core/utils';
+import { ratingReps } from '../../core/constants';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
   const rating = Math.round(item.rating);
   const dateTime = navigation
     ? dateDisplay(item.date)
     : timeDisplay(item.timestamp);
-  const emojis = ['😓', '😓', '😕', '🙂', '😁'];
 
   const EntryContent = () => (
     <>
       <View style={styles.ratingContainer}>
-        <Text style={styles.emoji}>{emojis[rating]}</Text>
+        <Text style={styles.emoji}>{ratingReps[rating - 1]}</Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.dateText}>{dateTime}</Text>
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 30,
+    color: theme.colors.accent,
   },
   ratingContainer: {
     marginRight: 25,

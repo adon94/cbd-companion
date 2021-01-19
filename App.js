@@ -88,7 +88,7 @@ const App = () => {
             } else if (route.name === 'Stats') {
               iconName = 'newspaper';
             } else {
-              iconName = 'add-circle';
+              iconName = 'add';
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -96,10 +96,11 @@ const App = () => {
         })}
         tabBarOptions={{
           activeTintColor: '#56ab2f',
-          activeBackgroundColor: '#ffffff',
-          inactiveTintColor: '#C0C1C6',
-          inactiveBackgroundColor: '#ffffff',
+          activeBackgroundColor: '#a8e063',
+          inactiveTintColor: '#fffa',
+          inactiveBackgroundColor: '#a8e063',
           showLabel: false,
+          style: { borderTopWidth: 0 },
         }}
         headerMode="screen">
         <Tab.Screen name="Entries" component={Entries} />

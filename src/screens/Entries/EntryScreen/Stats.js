@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { ratingReps } from '../../../core/constants';
 import { timeDisplay } from '../../../core/utils';
 
 const chartConfig = {
@@ -20,11 +21,9 @@ const chartConfig = {
   },
 };
 
-const emojis = ['😓', '😓', '😕', '🙂', '😁'];
-
 const Stats = ({ moods }) => {
   const formatLabel = (y) => {
-    return y % 1 === 0 && y < 5 ? emojis[parseInt(y, 10)] : '';
+    return y % 1 === 0 && y < 5 ? ratingReps[parseInt(y, 10) - 1] : '';
   };
 
   return (

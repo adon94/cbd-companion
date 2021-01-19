@@ -7,7 +7,9 @@ import EntryItem from '../EntryItem';
 import Stats from './Stats1';
 
 import { dateDisplay } from '../../../core/utils';
+import { ratingReps } from '../../../core/constants';
 import { getMoodsBySymptomOnDay } from '../../../api/database';
+import { theme } from '../../../core/theme';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -17,7 +19,6 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const EntryScreen = ({ route: { params: item }, navigation }) => {
   const average = Math.round(item.rating);
-  const emojis = ['😓', '😓', '😕', '🙂', '😁'];
   const [moods, setMoods] = useState([]);
   const [titleWidth, setTitleWidth] = useState(0);
   const [headerWidth, setHeaderWidth] = useState(0);
@@ -113,7 +114,9 @@ const EntryScreen = ({ route: { params: item }, navigation }) => {
               data={moods}
               ListHeaderComponent={() => (
                 <>
-                  <Text style={styles.emoji}>Overall: {emojis[average]}</Text>
+                  <Text style={styles.emoji}>
+                    Overall: {ratingReps[average - 1]}
+                  </Text>
                   <Stats moods={moods} />
                 </>
               )}
@@ -167,8 +170,8 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 30,
-    color: '#fff',
     fontWeight: 'bold',
+    color: theme.colors.accent,
   },
   heading: {
     color: '#fff',
