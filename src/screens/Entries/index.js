@@ -3,9 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Entries from './Entries';
 import EntryScreen from './EntryScreen';
+import SelectSymptom from './SelectSymptom';
 
 const Stack = createStackNavigator();
-// const RootStack = createStackNavigator();
+const RootStack = createStackNavigator();
 
 const Main = () => {
   return (
@@ -16,17 +17,17 @@ const Main = () => {
   );
 };
 
-// const RootStackScreen = () => {
-//   return (
-//     <RootStack.Navigator mode="modal" headerMode="none">
-//       <RootStack.Screen
-//         name="Main"
-//         component={Add}
-//         options={{ headerShown: false }}
-//       />
-//       <RootStack.Screen name="NewSymptom" component={NewSymptom} />
-//     </RootStack.Navigator>
-//   );
-// };
+const RootStackScreen = () => {
+  return (
+    <RootStack.Navigator mode="modal" headerMode="none">
+      <RootStack.Screen
+        name="Main"
+        component={Main}
+        options={{ headerShown: false }}
+      />
+      <RootStack.Screen name="SelectSymptom" component={SelectSymptom} />
+    </RootStack.Navigator>
+  );
+};
 
-export default Main;
+export default RootStackScreen;

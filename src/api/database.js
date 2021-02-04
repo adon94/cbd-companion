@@ -4,9 +4,11 @@ import auth from '@react-native-firebase/auth';
 const usersRef = firestore().collection('Users');
 
 async function addMood(symptoms) {
-  const timestamp = new Date().toISOString();
-
   const date = new Date();
+
+  // date.setDate(date.getDate() - 3);
+
+  const timestamp = date.toISOString();
   const year = date.getFullYear();
   let month = date.getMonth() + 1;
   let dt = date.getDate();
@@ -28,7 +30,7 @@ async function addMood(symptoms) {
     const ref = usersRef
       .doc(user.uid)
       .collection('symptoms')
-      .doc(symptom.name)
+      .doc(symptom.displayName)
       .collection('days')
       .doc(today)
       .collection('moods')
@@ -50,7 +52,7 @@ async function addMood(symptoms) {
       const todaysMoods = await usersRef
         .doc(user.uid)
         .collection('symptoms')
-        .doc(symptom.name)
+        .doc(symptom.displayName)
         .collection('days')
         .doc(today)
         .collection('moods')
@@ -66,7 +68,7 @@ async function addMood(symptoms) {
         const ref = usersRef
           .doc(user.uid)
           .collection('symptoms')
-          .doc(symptom.name)
+          .doc(symptom.displayName)
           .collection('days')
           .doc(today);
 
@@ -80,20 +82,6 @@ async function addMood(symptoms) {
 
   await batch2.commit();
 }
-
-// async function addDosage(dosage) {
-//   const user = auth().currentUser;
-//   // const batch = firestore().batch();
-
-//   await usersRef
-//     .doc(user.uid)
-//     .collection('Moods')
-//     .collection(new Date().toDateString())
-//     .add({
-//       ...dosage,
-//       timestamp: new Date().toISOString(),
-//     });
-// }
 
 async function getMoodsBySymptom(symptomName) {
   const moods = [];
@@ -146,11 +134,9 @@ async function addOnboardInfo(symptoms, cbdDetails) {
   batch.set(userRef, { ...cbdDetails, onboarded: true });
 
   symptoms.forEach((symptom) => {
-    const symptomsRef = userRef.collection('symptoms').doc(symptom);
+    const symptomsRef = userRef.collection('symptoms').doc(symptom.displayName);
 
-    batch.set(symptomsRef, {
-      name: symptom,
-    });
+    batch.set(symptomsRef, symptom);
   });
 
   await batch.commit();
@@ -171,7 +157,7 @@ async function isOnboarded() {
 async function addSymptom(symptom) {
   const user = auth().currentUser;
   await usersRef.doc(user.uid).collection('symptoms').doc(symptom).set({
-    name: symptom,
+    displayName: symptom,
   });
 }
 

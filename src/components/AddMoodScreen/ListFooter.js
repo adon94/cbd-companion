@@ -20,7 +20,7 @@ const ListFooter = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   symptomContainer: {
-    paddingHorizontal: 0,
+    paddingHorizontal: 20,
     width: windowWidth * 0.8,
   },
   symptomText: {

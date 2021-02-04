@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Spinner } from 'native-base';
+import { connect } from 'react-redux';
 
 import { addSymptom } from '../../api/database';
+import { addNewSymptom } from '../../actions';
 
 import Layout from '../../components/Layout';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 
-const NewSymptom = ({ navigation }) => {
+const NewSymptom = ({ navigation, dispatch }) => {
   const [name, setName] = useState({ value: '', error: '' });
   const [loading, setLoading] = useState(false);
 
@@ -19,11 +21,16 @@ const NewSymptom = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const addItem = () => {
+    dispatch(addNewSymptom(name.value));
+    navigation.goBack();
+  };
+
   return (
     <Layout>
       {loading && <Spinner />}
       <View style={styles.container}>
-        <Text style={styles.heading}>Track a new symptom</Text>
+        <Text style={styles.heading}>New symptom</Text>
         <View>
           <TextInput
             placeholder="Symptom name"
@@ -37,7 +44,7 @@ const NewSymptom = ({ navigation }) => {
           />
         </View>
         <View>
-          <Button onPress={submit}>Add</Button>
+          <Button onPress={addItem}>Add</Button>
           <Button mode="outlined" onPress={() => navigation.goBack()}>
             Cancel
           </Button>
@@ -76,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewSymptom;
+export default connect()(NewSymptom);

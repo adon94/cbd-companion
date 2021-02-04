@@ -1,25 +1,30 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   View,
   FlatList,
-  Text,
   Dimensions,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+
+import {
+  setAllSymptoms,
+  fetchSymptoms,
+  fetchSymptomsWithMoods,
+} from '../../reducers/symptomsReducer';
+import { sendMoods } from '../../reducers/moodsReducer';
 
 import Layout from '../../components/Layout';
 import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
-
 import MoodInput from '../../components/AddMoodScreen/MoodInput';
 import ListFooter from '../../components/AddMoodScreen/ListFooter';
-
-import { store } from '../../core/store';
-import { getSymptoms, addMood } from '../../api/database';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
+
+import LoadingScreen from '../LoadingScreen';
 
 const isIos = Platform.OS === 'ios';
 
@@ -28,22 +33,15 @@ const feels = ['1', '2', '3', '4'];
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-console.log(windowHeight);
-
 const AddMood = ({ route, navigation }) => {
-  const [symptoms, setSymptoms] = useState([]);
-  const globalState = useContext(store);
-  const {
-    state: { dosage },
-  } = globalState;
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const dispatch = useDispatch();
+  const moodsStatus = useSelector((state) => state.moods.status);
+  // const [symptoms, setSymptoms] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await getSymptoms();
-      setSymptoms(data);
-    }
-    fetchData();
-  }, []);
+    dispatch(fetchSymptoms());
+  }, [dispatch]);
 
   const beforeDose = route.params ? route.params.beforeDose : false;
 
@@ -51,13 +49,17 @@ const AddMood = ({ route, navigation }) => {
     ? 'How did you feel before dosing?'
     : 'How do you feel?';
 
-  const submit = async (rating) => {
-    if (beforeDose) {
-      await addMood(symptoms);
-    } else {
-      await addMood(symptoms);
+  const submit = async () => {
+    try {
+      const resultAction = await dispatch(sendMoods(symptoms));
+      console.log(resultAction);
+      if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchSymptomsWithMoods());
+        navigation.navigate('Entries');
+      }
+    } catch (err) {
+      console.log(err);
     }
-    navigation.navigate('Entries');
   };
 
   const updateIndexAt = (rating, index) => {
@@ -65,20 +67,25 @@ const AddMood = ({ route, navigation }) => {
     newArr[index] = {
       ...newArr[index],
       rating,
-      dosage: beforeDose ? dosage.amount : null,
     };
-    setSymptoms(newArr);
+    dispatch(setAllSymptoms(newArr));
   };
+
+  if (moodsStatus === 'loading') {
+    return <LoadingScreen />;
+  }
 
   return (
     <Layout>
       {beforeDose && <BackButton onPress={() => navigation.goBack()} />}
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('AddDosage')}>
-          <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
-          <Title style={styles.smallTitle}>(Tap to change)</Title>
-        </TouchableOpacity>
-        <Header lg>{prompt}</Header>
+        <View style={styles.containerWithPadding}>
+          <TouchableOpacity onPress={() => navigation.navigate('AddDosage')}>
+            <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
+            <Title style={styles.smallTitle}>(Tap to change)</Title>
+          </TouchableOpacity>
+          <Header lg>{prompt}</Header>
+        </View>
         {symptoms && symptoms.length > 0 ? (
           <FlatList
             data={symptoms}
@@ -90,10 +97,10 @@ const AddMood = ({ route, navigation }) => {
               />
             )}
             ListFooterComponent={() => <ListFooter navigation={navigation} />}
-            keyExtractor={(symptom) => symptom.name}
+            keyExtractor={(symptom) => symptom.displayName}
             horizontal={true}
             snapToAlignment="start"
-            snapToInterval={windowWidth * 0.8}
+            snapToInterval={windowWidth * 0.85}
             decelerationRate="fast"
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -102,7 +109,9 @@ const AddMood = ({ route, navigation }) => {
         ) : (
           <ListFooter navigation={navigation} />
         )}
-        <Button onPress={submit}>Done</Button>
+        <View style={styles.containerWithPadding}>
+          <Button onPress={submit}>Done</Button>
+        </View>
       </View>
     </Layout>
   );
@@ -112,10 +121,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: 20,
     paddingBottom: 0,
     marginTop: isIos && windowHeight > 700 ? windowHeight / 15 : 0,
     marginBottom: 20,
+  },
+  containerWithPadding: {
+    paddingHorizontal: 20,
   },
   smallTitle: {
     color: '#fff',

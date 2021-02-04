@@ -20,18 +20,33 @@ const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
         autoCompleteType="off"
         disabled={unavailable}
       />
-      <View style={styles.mgContainer}>
-        <TextInput
-          placeholder="Concentration"
-          returnKeyType="done"
-          value={cbdDetails.mg}
-          onChangeText={(text) => setCbdDetails({ ...cbdDetails, mg: text })}
-          keyboardType="numeric"
-          autoCompleteType="off"
-          disabled={unavailable}
-          width={200}
-        />
-        <Text style={styles.mgText}>mg</Text>
+      <View style={styles.doubleColumn}>
+        <View style={styles.mgContainer}>
+          <TextInput
+            placeholder="Concentration"
+            returnKeyType="done"
+            value={cbdDetails.mg}
+            onChangeText={(text) => setCbdDetails({ ...cbdDetails, mg: text })}
+            keyboardType="numeric"
+            autoCompleteType="off"
+            disabled={unavailable}
+            width={120}
+          />
+          <Text style={styles.mgText}>mg</Text>
+        </View>
+        <View style={styles.mgContainer}>
+          <TextInput
+            placeholder="Amount"
+            returnKeyType="done"
+            value={cbdDetails.ml}
+            onChangeText={(text) => setCbdDetails({ ...cbdDetails, ml: text })}
+            keyboardType="numeric"
+            autoCompleteType="off"
+            disabled={unavailable}
+            width={120}
+          />
+          <Text style={styles.mgText}>ml</Text>
+        </View>
       </View>
       <CheckboxInput checked={unavailable} setChecked={setUnavailable}>
         I don't have this information yet
@@ -56,10 +71,14 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 20,
   },
+  doubleColumn: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   mgContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
   },
   mgText: {
     fontSize: 18,

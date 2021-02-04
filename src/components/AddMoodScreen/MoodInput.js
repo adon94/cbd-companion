@@ -24,7 +24,7 @@ const MoodInput = ({ feels, symptom, setSymptoms }) => {
 
   return (
     <View style={styles.symptomContainer}>
-      <Text style={styles.symptomText}>{symptom.name}</Text>
+      <Text style={styles.symptomText}>{symptom.displayName}</Text>
       <View style={styles.boxesContainer}>
         {feels.map((feel, index) => (
           <TouchableOpacity
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   symptomContainer: {
     paddingHorizontal: 0,
     width: windowWidth * 0.8,
+    marginLeft: 20,
   },
   symptomText: {
     color: '#fff',
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
   boxesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignContent: 'space-between',
+    marginRight: 20,
   },
   feelBox: {
     backgroundColor: '#f0f0f04D',

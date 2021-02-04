@@ -8,6 +8,8 @@ const TextInput = ({ errorText, ...props }) => (
     <Input
       style={[styles.input, props.disabled && styles.disabled]}
       selectionColor={theme.colors.primary}
+      placeholderTextColor="#ffffff99"
+      editable={!props.disabled}
       {...props}
     />
     {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
@@ -19,16 +21,18 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   input: {
-    backgroundColor: theme.colors.surface,
-    color: theme.colors.primary,
+    // backgroundColor: theme.colors.surface,
+    color: '#fff',
     height: 50,
     borderRadius: 4,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     fontSize: 18,
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
   },
   disabled: {
-    backgroundColor: '#E5E5E5',
-    color: '#888888',
+    // backgroundColor: '#E5E5E5',
+    opacity: 0.5,
   },
   error: {
     fontSize: 14,

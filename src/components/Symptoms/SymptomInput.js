@@ -1,101 +1,87 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SortableList from 'react-native-sortable-list';
 
-import CheckboxInput from '../../components/CheckboxInput';
+import { theme } from '../../core/theme';
+import { addNewSymptom, setNewSymptoms } from '../../actions';
 
-// Adding 'primary goal' function before working on notifictions
-
-const Row = ({ data: { label, checked, setChecked }, index }) => {
-  // if (index === 0) {
-  //   return (
-  //     <View style={{ height: 500 }}>
-  //       <Text style={styles.indicator}>Primary goal</Text>
-  //       <View style={styles.rowContainer}>
-  //         <CheckboxInput checked={checked} setChecked={setChecked}>
-  //           {label}
-  //         </CheckboxInput>
-  //         <Ionicons name="menu-outline" size={35} color="#ffffff" />
-  //       </View>
-  //       <View style={styles.divider} />§§
-  //     </View>
-  //   );
-  // }
-
+const Row = ({ symptom, onPress, icon }) => {
   return (
-    <View style={styles.rowContainer}>
-      <CheckboxInput checked={checked} setChecked={setChecked}>
-        {label}
-        {index === 0 && checked && ' (Primary goal)'}
-      </CheckboxInput>
-      <Ionicons name="menu-outline" size={35} color="#ffffff" />
+    <View style={styles.rowContainer} key={symptom.displayName}>
+      <View style={styles.plainTextButton}>
+        <TouchableOpacity style={styles.iconContainer} onPress={onPress}>
+          <Ionicons name={icon} size={35} color="#ffffff" />
+        </TouchableOpacity>
+        <Text style={styles.plainText}>{symptom.displayName}</Text>
+      </View>
     </View>
   );
 };
 
-const SymptomInput = ({ symptoms, setSymptoms }) => {
-  const { anxiety, sleep, epilepsy, chronicPain } = symptoms;
+const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const dispatch = useDispatch();
 
-  const symptomList = {
-    0: {
-      label: 'Anxiety',
-      checked: anxiety,
-      setChecked: (value) => setSymptoms({ ...symptoms, anxiety: value }),
-    },
-    1: {
-      label: 'Sleep',
-      checked: sleep,
-      setChecked: (value) => setSymptoms({ ...symptoms, sleep: value }),
-    },
-    2: {
-      label: 'Epilepsy',
-      checked: epilepsy,
-      setChecked: (value) => setSymptoms({ ...symptoms, epilepsy: value }),
-    },
-    3: {
-      label: 'Chronic Pain',
-      checked: chronicPain,
-      setChecked: (value) => setSymptoms({ ...symptoms, chronicPain: value }),
-    },
+  const addToDefault = (symp) => {
+    setDefaultSymptoms(defaultSymptoms.concat([symp]));
+  };
+
+  const addSymptom = (symp, index) => {
+    const newArr = [...defaultSymptoms];
+    newArr.splice(index, 1);
+    setDefaultSymptoms(newArr);
+    dispatch(addNewSymptom(symp.displayName));
+  };
+
+  const removeSymptom = (symp, i) => {
+    const newArr2 = [...symptoms];
+    newArr2.splice(i, 1);
+    dispatch(setNewSymptoms(newArr2));
+
+    addToDefault(symp);
   };
 
   return (
     <View style={styles.container}>
-      <SortableList
-        style={styles.list}
-        contentContainerStyle={styles.contentContainer}
-        data={symptomList}
-        renderRow={Row}
-        scrollEnabled={false}
+      {symptoms.length > 0 && (
+        <FlatList
+          data={symptoms}
+          renderItem={({ item, index }) => (
+            <Row
+              key={item.displayName}
+              symptom={item}
+              onPress={() => removeSymptom(item, index)}
+              icon="remove"
+            />
+          )}
+          contentContainerStyle={styles.contentContainer}
+        />
+      )}
+      <FlatList
+        data={defaultSymptoms}
+        renderItem={({ item, index }) => (
+          <Row
+            key={item.displayName}
+            symptom={item}
+            onPress={() => addSymptom(item, index)}
+            icon="add"
+          />
+        )}
       />
-      {/* <CheckboxInput
-        checked={anxiety}
-        setChecked={(value) => setSymptoms({ ...symptoms, anxiety: value })}>
-        Anxiety
-      </CheckboxInput>
-      <CheckboxInput
-        checked={sleep}
-        setChecked={(value) => setSymptoms({ ...symptoms, sleep: value })}>
-        Sleep
-      </CheckboxInput>
-      <CheckboxInput
-        checked={epilepsy}
-        setChecked={(value) => setSymptoms({ ...symptoms, epilepsy: value })}>
-        Epilepsy
-      </CheckboxInput>
-      <CheckboxInput
-        checked={chronicPain}
-        setChecked={(value) =>
-          setSymptoms({ ...symptoms, chronicPain: value })
-        }>
-        Chronic Pain
-      </CheckboxInput> */}
-      <TouchableOpacity style={styles.plainTextButton}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NewSymptom')}
+        style={styles.plainTextButton}>
         <View style={styles.iconContainer}>
           <Ionicons name="add-circle-outline" size={40} color="#ffffff" />
         </View>
-        <Text style={styles.plainText}>Add a symptom</Text>
+        <Text style={styles.plainText}>Something else</Text>
       </TouchableOpacity>
     </View>
   );
@@ -105,10 +91,16 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 50,
   },
+  contentContainer: {
+    marginBottom: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.accent,
+  },
   plainTextButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
   },
   iconContainer: {
     width: 40,
@@ -124,15 +116,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  indicator: {
-    color: '#fff',
-  },
-  divider: {
-    width: '100%',
-    height: 1,
-    backgroundColor: '#fff',
-    marginBottom: 100,
   },
 });
 

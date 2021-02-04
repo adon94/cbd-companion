@@ -8,56 +8,43 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { getMoodsBySymptom, getSymptoms } from '../../api/database';
 import { signOut } from '../../api/auth';
+import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
 
 import Layout from '../../components/Layout';
 
 import EntryItem from './EntryItem';
-import SelectSymptom from './SelectSymptom';
+import SelectSymptom from './SelectButton';
 import HomeGraph from './HomeGraph';
+import LoadingScreen from '../LoadingScreen';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-
-console.log(screenHeight);
 
 const HEADER_MAX_HEIGHT = 210;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const Entries = ({ navigation }) => {
-  const [moods, setMoods] = useState([]);
-  const [symptomsList, setSymptomsList] = useState([]);
-  const [symptomIndex, setSymptomIndex] = useState(0);
+  const viewingSymptom = useSelector((state) => state.viewingSymptom);
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const moods = useSelector((state) => state.moods.moods);
+
+  const symptomsStatus = useSelector((state) => state.symptoms.status);
+  const moodsStatus = useSelector((state) => state.moods.status);
+
+  const dispatch = useDispatch();
+
   const [titleWidth, setTitleWidth] = useState(0);
   const [headingHeight, setHeadingHeight] = useState(0);
 
   useEffect(() => {
-    async function fetchSymptoms() {
-      const symptomsData = await getSymptoms();
-      if (symptomsData && symptomsData.length > 0) {
-        setSymptomsList(symptomsData);
-        setSymptomIndex(0);
-        fetchMoods(symptomsData[0].name);
-      }
-    }
-    fetchSymptoms();
-  }, []);
-
-  async function fetchMoods(symptomName) {
-    const moodData = await getMoodsBySymptom(symptomName);
-    setMoods(moodData);
-  }
-
-  useEffect(() => {
-    if (symptomsList.length > 0) {
-      fetchMoods(symptomsList[symptomIndex].name);
-    }
-  }, [symptomIndex, symptomsList]);
+    dispatch(fetchSymptomsWithMoods());
+  }, [dispatch]);
 
   const logout = () => {
     signOut();
@@ -81,6 +68,10 @@ const Entries = ({ navigation }) => {
     outputRange: [0, (screenWidth - titleWidth) / 4],
     extrapolate: 'clamp',
   });
+
+  if (symptomsStatus === 'loading' || moodsStatus === 'loading') {
+    return <LoadingScreen />;
+  }
 
   return (
     <Layout>
@@ -109,18 +100,17 @@ const Entries = ({ navigation }) => {
               transform: [{ translateX: titleTranslateX }],
             },
           ]}>
-          {symptomsList[symptomIndex] && (
+          {symptoms[viewingSymptom] && (
             <SelectSymptom
-              selected={symptomIndex}
-              setSelected={setSymptomIndex}
-              options={symptomsList}
+              onPress={() => navigation.navigate('SelectSymptom')}
               onLayout={(e) => {
                 if (titleWidth === 0) {
                   console.log(e.nativeEvent.layout.width);
                   setTitleWidth(e.nativeEvent.layout.width);
                 }
-              }}
-            />
+              }}>
+              {symptoms[viewingSymptom].displayName}
+            </SelectSymptom>
           )}
         </Animated.View>
       </Animated.View>
@@ -132,7 +122,7 @@ const Entries = ({ navigation }) => {
             <EntryItem
               item={item}
               navigation={navigation}
-              symptomName={symptomsList[symptomIndex].name}
+              symptomName={symptoms[viewingSymptom].displayName}
             />
           )}
           keyExtractor={(item, index) => index.toString()}

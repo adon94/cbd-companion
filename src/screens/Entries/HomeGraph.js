@@ -15,14 +15,20 @@ const HomeGraph = ({ moods }) => {
   const thisWeek = [];
   moods.some((el) => {
     const notThisWeek = new Date(el.date) < monday;
-    if (!notThisWeek) thisWeek.push(el);
+    if (!notThisWeek) {
+      thisWeek.push(el);
+    }
     return notThisWeek;
   });
 
+  const showStats = thisWeek.length > 0;
+
   return (
     <View>
-      <Text style={styles.titleText}>{thisWeek.length > 0 ? 'This week' : 'No entries this week'}</Text>
-      <Stats moods={thisWeek.reverse()} average />
+      <Text style={styles.titleText}>
+        {showStats ? 'This week' : 'No entries this week'}
+      </Text>
+      {showStats && <Stats moods={thisWeek.reverse()} average />}
     </View>
   );
 };
