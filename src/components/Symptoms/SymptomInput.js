@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   StyleSheet,
   View,
   Text,
@@ -10,7 +11,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { theme } from '../../core/theme';
-import { addNewSymptom, setNewSymptoms } from '../../actions';
+import {
+  addSymptom as addNewSymptom,
+  setAllSymptoms,
+} from '../../reducers/symptomsReducer';
 
 const Row = ({ symptom, onPress, icon }) => {
   return (
@@ -37,15 +41,35 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
     const newArr = [...defaultSymptoms];
     newArr.splice(index, 1);
     setDefaultSymptoms(newArr);
-    dispatch(addNewSymptom(symp.displayName));
+    dispatch(addNewSymptom({ ...symp, new: true }));
+  };
+
+  const checkIfExisting = (symp, i) => {
+    if (symp.new) {
+      removeSymptom(symp, i);
+    } else {
+      Alert.alert(
+        'Are you sure?',
+        `'${symp.displayName}' and all of its tracked items will be removed if you save changes.`,
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          { text: 'Remove', onPress: () => removeSymptom(symp, i) },
+        ],
+        { cancelable: false },
+      );
+    }
   };
 
   const removeSymptom = (symp, i) => {
     const newArr2 = [...symptoms];
     newArr2.splice(i, 1);
-    dispatch(setNewSymptoms(newArr2));
+    dispatch(setAllSymptoms(newArr2));
 
-    addToDefault(symp);
+    addToDefault(symp.new ? symp : { ...symp, existing: true });
   };
 
   return (
@@ -55,20 +79,20 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
           data={symptoms}
           renderItem={({ item, index }) => (
             <Row
-              key={item.displayName}
               symptom={item}
-              onPress={() => removeSymptom(item, index)}
+              onPress={() => checkIfExisting(item, index)}
               icon="remove"
             />
           )}
+          keyExtractor={(item) => item.displayName}
           contentContainerStyle={styles.contentContainer}
         />
       )}
       <FlatList
         data={defaultSymptoms}
+        keyExtractor={(item) => item.displayName}
         renderItem={({ item, index }) => (
           <Row
-            key={item.displayName}
             symptom={item}
             onPress={() => addSymptom(item, index)}
             icon="add"
@@ -76,7 +100,7 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
         )}
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate('NewSymptom')}
+        onPress={() => navigation.navigate('SymptomTextInput')}
         style={styles.plainTextButton}>
         <View style={styles.iconContainer}>
           <Ionicons name="add-circle-outline" size={40} color="#ffffff" />

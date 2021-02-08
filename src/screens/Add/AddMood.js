@@ -21,7 +21,7 @@ import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
 import MoodInput from '../../components/AddMoodScreen/MoodInput';
-import ListFooter from '../../components/AddMoodScreen/ListFooter';
+import AddSymptomFooter from '../../components/AddMoodScreen/AddSymptomFooter';
 import Header from '../../components/Header';
 
 import LoadingScreen from '../LoadingScreen';
@@ -52,7 +52,6 @@ const AddMood = ({ route, navigation }) => {
   const submit = async () => {
     try {
       const resultAction = await dispatch(sendMoods(symptoms));
-      console.log(resultAction);
       if (resultAction.meta.requestStatus === 'fulfilled') {
         dispatch(fetchSymptomsWithMoods());
         navigation.navigate('Entries');
@@ -96,7 +95,9 @@ const AddMood = ({ route, navigation }) => {
                 feels={feels}
               />
             )}
-            ListFooterComponent={() => <ListFooter navigation={navigation} />}
+            ListFooterComponent={() => (
+              <AddSymptomFooter navigation={navigation} />
+            )}
             keyExtractor={(symptom) => symptom.displayName}
             horizontal={true}
             snapToAlignment="start"
@@ -107,7 +108,7 @@ const AddMood = ({ route, navigation }) => {
             contentContainerStyle={styles.flatList}
           />
         ) : (
-          <ListFooter navigation={navigation} />
+          <AddSymptomFooter navigation={navigation} />
         )}
         <View style={styles.containerWithPadding}>
           <Button onPress={submit}>Done</Button>

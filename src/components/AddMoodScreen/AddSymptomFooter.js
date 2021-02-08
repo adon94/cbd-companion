@@ -5,13 +5,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
 
-const ListFooter = ({ navigation }) => {
+const AddSymptomFooter = ({ navigation }) => {
   return (
     <View style={styles.symptomContainer}>
       <Text style={styles.symptomText}>Track a new symptom</Text>
       <TouchableOpacity
         style={styles.boxesContainer}
-        onPress={() => navigation.navigate('NewSymptom')}>
+        onPress={() => navigation.navigate('AddSymptom')}>
         <Ionicons name="add" size={80} color="#ffffff" />
       </TouchableOpacity>
     </View>
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListFooter;
+export default AddSymptomFooter;

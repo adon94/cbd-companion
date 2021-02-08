@@ -4,9 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider, useSelector, useDispatch } from 'react-redux';
-import { Spinner } from 'native-base';
 
-import { StateProvider } from './src/core/store';
 import theme from './src/core/theme';
 import { isOnboarded } from './src/api/database';
 import store from './src/reducers';
@@ -14,23 +12,18 @@ import store from './src/reducers';
 import Login from './src/screens/NoUser/Login';
 import Register from './src/screens/NoUser/Register';
 import PreLogin from './src/screens/NoUser/PreLogin';
-import Layout from './src/components/Layout';
-import { SafeAreaView } from 'react-native';
 import LoggedIn from './src/screens/LoggedIn/LoggedIn';
 
 import { set as setUser, setOnboarded } from './src/reducers/userReducer';
-import { addLoading, removeLoading } from './src/reducers/loadedReducer';
 import LoadingScreen from './src/screens/LoadingScreen';
 
 const Stack = createStackNavigator();
 
 const Providers = ({ children }) => (
   <Provider store={store}>
-    <StateProvider>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>{children}</NavigationContainer>
-      </PaperProvider>
-    </StateProvider>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>{children}</NavigationContainer>
+    </PaperProvider>
   </Provider>
 );
 
@@ -43,7 +36,6 @@ const App = () => {
 
   // Handle user state changes
   async function onAuthStateChanged(newUser) {
-    console.log('newUser', newUser.email);
     dispatch(setUser({ email: newUser.email }));
     if (initializing) {
       setInitializing(false);
@@ -52,7 +44,6 @@ const App = () => {
     if (userInfo && userInfo.onboarded) {
       dispatch(setOnboarded(true));
     }
-    // dispatch(setLoaded(true));
     setLoaded(true);
   }
 
@@ -61,8 +52,8 @@ const App = () => {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (initializing) {
-    return null;
+  if (initializing || !loaded) {
+    return <LoadingScreen />;
   }
 
   if (!user) {
@@ -73,10 +64,6 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     );
-  }
-
-  if (!loaded) {
-    return <LoadingScreen />;
   }
 
   return <LoggedIn />;

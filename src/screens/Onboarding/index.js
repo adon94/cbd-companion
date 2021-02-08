@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Onboarding from './Onboarding';
-import NewSymptom from '../Add/NewSymptom';
+import SymptomTextInput from '../Add/SymptomTextInput';
 // import EntryScreen from './EntryScreen';
 
 const Stack = createStackNavigator();
@@ -25,7 +25,7 @@ const RootStackScreen = () => {
         component={Main}
         options={{ headerShown: false }}
       />
-      <RootStack.Screen name="NewSymptom" component={NewSymptom} />
+      <RootStack.Screen name="SymptomTextInput" component={SymptomTextInput} />
     </RootStack.Navigator>
   );
 };

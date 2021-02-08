@@ -92,7 +92,7 @@ const Entries = ({ navigation }) => {
           }
         }}>
         <Animated.Text style={[styles.title, { opacity: headerOpacity }]}>
-          My CBD Journey
+          My CBD Journal
         </Animated.Text>
         <Animated.View
           style={[

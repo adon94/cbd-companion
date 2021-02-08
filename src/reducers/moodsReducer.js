@@ -26,7 +26,6 @@ const moodsReducer = createSlice({
   },
   reducers: {
     setAllMoods: (state, action) => {
-      console.log(action.payload);
       return {
         ...state,
         moods: action.payload,

@@ -10,7 +10,7 @@ import Layout from '../../components/Layout';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 
-const NewSymptom = ({ navigation, dispatch }) => {
+const SymptomTextInput = ({ navigation, dispatch }) => {
   const [name, setName] = useState({ value: '', error: '' });
   const [loading, setLoading] = useState(false);
 
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect()(NewSymptom);
+export default connect()(SymptomTextInput);

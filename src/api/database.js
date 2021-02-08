@@ -142,6 +142,29 @@ async function addOnboardInfo(symptoms, cbdDetails) {
   await batch.commit();
 }
 
+async function changeMultipleSymptoms(toAdd, toRemove) {
+  console.log(toAdd);
+  const user = auth().currentUser;
+
+  const batch = firestore().batch();
+
+  const userRef = usersRef.doc(user.uid);
+
+  toAdd.forEach(({ displayName }) => {
+    const symptomsRef = userRef.collection('symptoms').doc(displayName);
+
+    batch.set(symptomsRef, { displayName });
+  });
+
+  toRemove.forEach(({ displayName }) => {
+    const symptomsRef = userRef.collection('symptoms').doc(displayName);
+
+    batch.delete(symptomsRef, { displayName });
+  });
+
+  await batch.commit();
+}
+
 async function isOnboarded() {
   const user = auth().currentUser;
   if (user) {
@@ -186,4 +209,5 @@ export {
   getMoodsBySymptomOnDay,
   addOnboardInfo,
   isOnboarded,
+  changeMultipleSymptoms,
 };

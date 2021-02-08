@@ -42,7 +42,7 @@ const LoggedIn = () => {
         inactiveTintColor: '#fffa',
         inactiveBackgroundColor: '#a8e063',
         showLabel: false,
-        style: { borderTopWidth: 0 },
+        style: { borderTopWidth: 0, backgroundColor: '#a8e063' },
       }}
       headerMode="screen">
       <Tab.Screen name="Entries" component={Entries} />

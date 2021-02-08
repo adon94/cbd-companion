@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getSymptoms } from '../api/database';
+import { getSymptoms, changeMultipleSymptoms } from '../api/database';
 import { fetchMoods } from './moodsReducer';
 
 export const fetchSymptoms = createAsyncThunk(
@@ -19,6 +19,15 @@ export const fetchSymptomsWithMoods = createAsyncThunk(
   },
 );
 
+export const sendSymptomEdits = createAsyncThunk(
+  'symptoms/sendSymptomEdits',
+  async ({ toAdd, toRemove }, { dispatch }) => {
+    console.log('sendSymptomEdits', toAdd.length);
+    await changeMultipleSymptoms(toAdd, toRemove);
+    dispatch(fetchSymptoms());
+  },
+);
+
 const symptomsReducer = createSlice({
   name: 'symptoms',
   initialState: {
@@ -27,13 +36,8 @@ const symptomsReducer = createSlice({
     error: null,
   },
   reducers: {
-    add: (state, action) => {
-      return [
-        ...state,
-        {
-          displayName: action.payload,
-        },
-      ];
+    addSymptom: (state, action) => {
+      state.symptoms.push(action.payload);
     },
     setAllSymptoms: (state, action) => {
       return {
@@ -73,9 +77,20 @@ const symptomsReducer = createSlice({
       state.status = 'failed';
       state.error = action.error.message;
     },
+    // sendSymptomEdits
+    [sendSymptomEdits.pending]: (state, action) => {
+      state.status = 'loading';
+    },
+    [sendSymptomEdits.fulfilled]: (state, action) => {
+      state.status = 'idle';
+    },
+    [sendSymptomEdits.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    },
   },
 });
 
-export const { add, setAllSymptoms } = symptomsReducer.actions;
+export const { addSymptom, setAllSymptoms } = symptomsReducer.actions;
 
 export default symptomsReducer.reducer;

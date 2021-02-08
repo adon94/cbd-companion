@@ -1,10 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import NewSymptom from './NewSymptom';
+import SymptomTextInput from './SymptomTextInput';
 import AddMood from './AddMood';
 import AddDosage from './AddDosage';
 import SelectAdd from './SelectAdd';
+import AddSymptom from './AddSymptom/AddSymptom';
 
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -26,7 +27,8 @@ const RootStackScreen = () => {
         component={Add}
         options={{ headerShown: false }}
       />
-      <RootStack.Screen name="NewSymptom" component={NewSymptom} />
+      <RootStack.Screen name="SymptomTextInput" component={SymptomTextInput} />
+      <RootStack.Screen name="AddSymptom" component={AddSymptom} />
       <RootStack.Screen name="AddDosage" component={AddDosage} />
     </RootStack.Navigator>
   );
