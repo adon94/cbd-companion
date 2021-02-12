@@ -1,6 +1,5 @@
-import { View } from 'native-base';
 import React from 'react';
-import { SafeAreaView, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView, StyleSheet, StatusBar, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const topColor = '#56ab2f';

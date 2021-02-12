@@ -1,12 +1,11 @@
 import React, { memo } from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
-import { Button as PaperButton } from 'react-native-paper';
+import { StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 import { theme } from '../core/theme';
 
 const windowWidth = Dimensions.get('window').width;
 
 const Button = ({ mode, style, fullWidth, children, ...props }) => (
-  <PaperButton
+  <TouchableOpacity
     style={[
       styles.button,
       mode === 'outlined'
@@ -21,8 +20,14 @@ const Button = ({ mode, style, fullWidth, children, ...props }) => (
     ]}
     mode={mode}
     {...props}>
-    {children}
-  </PaperButton>
+    <Text
+      style={[
+        styles.text,
+        mode === 'outlined' && { color: theme.colors.backdrop },
+      ]}>
+      {children}
+    </Text>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
@@ -31,12 +36,15 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: 10,
+    padding: 10,
+    borderRadius: 6,
   },
   text: {
     color: '#ffffff',
     fontSize: windowWidth / 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
 });
 

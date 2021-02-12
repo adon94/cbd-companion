@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Form, Icon, Picker } from 'native-base';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 

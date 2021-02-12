@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 
-import theme from './src/core/theme';
 import { isOnboarded } from './src/api/database';
 import store from './src/reducers';
 
@@ -21,9 +19,7 @@ const Stack = createStackNavigator();
 
 const Providers = ({ children }) => (
   <Provider store={store}>
-    <PaperProvider theme={theme}>
-      <NavigationContainer>{children}</NavigationContainer>
-    </PaperProvider>
+    <NavigationContainer>{children}</NavigationContainer>
   </Provider>
 );
 
@@ -36,7 +32,11 @@ const App = () => {
 
   // Handle user state changes
   async function onAuthStateChanged(newUser) {
-    dispatch(setUser({ email: newUser.email }));
+    if (newUser && newUser.email) {
+      dispatch(setUser({ email: newUser.email }));
+    } else {
+      dispatch(setUser(null));
+    }
     if (initializing) {
       setInitializing(false);
     }

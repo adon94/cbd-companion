@@ -5,7 +5,7 @@ const viewingSymptomReducer = createSlice({
   initialState: 0,
   reducers: {
     setViewingSymptom: (state, action) => {
-      return { ...state, email: action.payload.email };
+      return action.payload;
     },
   },
 });

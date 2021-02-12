@@ -1,25 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { Spinner } from 'native-base';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { addSymptom } from '../../api/database';
 import { addNewSymptom } from '../../actions';
 
 import Layout from '../../components/Layout';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 
-const SymptomTextInput = ({ navigation, dispatch }) => {
+const SymptomTextInput = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState({ value: '', error: '' });
-  const [loading, setLoading] = useState(false);
-
-  const submit = async () => {
-    setLoading(true);
-    await addSymptom(name.value);
-    setLoading(false);
-    navigation.goBack();
-  };
 
   const addItem = () => {
     dispatch(addNewSymptom(name.value));
@@ -28,7 +19,6 @@ const SymptomTextInput = ({ navigation, dispatch }) => {
 
   return (
     <Layout>
-      {loading && <Spinner />}
       <View style={styles.container}>
         <Text style={styles.heading}>New symptom</Text>
         <View>
@@ -83,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect()(SymptomTextInput);
+export default SymptomTextInput;

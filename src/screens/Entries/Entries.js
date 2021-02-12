@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   StatusBar,
+  Text,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -76,7 +77,8 @@ const Entries = ({ navigation }) => {
   return (
     <Layout>
       <TouchableOpacity onPress={logout} style={styles.settingsButton}>
-        <Ionicons name="person" size={30} color="#ffffff" />
+        {/* <Ionicons name="person" size={30} color="#ffffff" /> */}
+        <Text style={styles.logout}>Log out</Text>
       </TouchableOpacity>
       <Animated.View
         style={[
@@ -169,6 +171,11 @@ const styles = StyleSheet.create({
   flatList: {
     paddingTop: HEADER_MAX_HEIGHT + 25,
     paddingHorizontal: 20,
+  },
+  logout: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

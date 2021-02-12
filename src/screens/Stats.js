@@ -7,7 +7,7 @@ const Stats = () => {
   return (
     <Layout>
       <View style={styles.container}>
-        <Text style={styles.title}>My Stats</Text>
+        <Text style={styles.title}>Stats coming soon</Text>
       </View>
     </Layout>
   );
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 60,
+    fontSize: 40,
     fontWeight: 'bold',
     marginBottom: 20,
   },
