@@ -105,7 +105,7 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
         <View style={styles.iconContainer}>
           <Ionicons name="add-circle-outline" size={40} color="#ffffff" />
         </View>
-        <Text style={styles.plainText}>Something else</Text>
+        <Text style={styles.plainText}>Add a custom goal</Text>
       </TouchableOpacity>
     </View>
   );

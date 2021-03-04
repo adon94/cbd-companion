@@ -10,7 +10,6 @@ import {
   Text,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { signOut } from '../../api/auth';
 import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
@@ -21,6 +20,7 @@ import EntryItem from './EntryItem';
 import SelectSymptom from './SelectButton';
 import HomeGraph from './HomeGraph';
 import LoadingScreen from '../LoadingScreen';
+import LinearGradient from 'react-native-linear-gradient';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
@@ -66,7 +66,7 @@ const Entries = ({ navigation }) => {
   });
   const titleTranslateX = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, (screenWidth - titleWidth) / 4],
+    outputRange: [0, (screenWidth - titleWidth - 40) / 2],
     extrapolate: 'clamp',
   });
 
@@ -89,7 +89,6 @@ const Entries = ({ navigation }) => {
         ]}
         onLayout={(e) => {
           if (headingHeight === 0) {
-            console.log(e.nativeEvent.layout.height);
             setHeadingHeight(e.nativeEvent.layout.height);
           }
         }}>
@@ -107,7 +106,6 @@ const Entries = ({ navigation }) => {
               onPress={() => navigation.navigate('SelectSymptom')}
               onLayout={(e) => {
                 if (titleWidth === 0) {
-                  console.log(e.nativeEvent.layout.width);
                   setTitleWidth(e.nativeEvent.layout.width);
                 }
               }}>
@@ -134,6 +132,7 @@ const Entries = ({ navigation }) => {
             { useNativeDriver: true }, // use native driver for animation
           )}
         />
+        <LinearGradient style={styles.fade} colors={['#a8e06300', '#a8e063']} />
       </SafeAreaView>
     </Layout>
   );
@@ -146,6 +145,12 @@ const styles = StyleSheet.create({
     right: 0,
     alignSelf: 'flex-end',
     margin: 20,
+  },
+  fade: {
+    height: 10,
+    width: screenWidth,
+    position: 'absolute',
+    bottom: 0,
   },
   container: {
     flex: 1,

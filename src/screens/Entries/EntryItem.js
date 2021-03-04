@@ -18,7 +18,6 @@ const EntryItem = ({ item, symptomName, navigation }) => {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.dateText}>{dateTime}</Text>
-        <Text style={styles.notesText}>Some notes here...</Text>
       </View>
     </>
   );
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 18,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   notesText: {
     color: '#ffffff',

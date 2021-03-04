@@ -4,9 +4,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Label from '../../components/Label';
 
-const SelectButton = ({ onPress, children }) => {
+const SelectButton = ({ onPress, children, onLayout }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.selectContainer}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.selectContainer}
+      onLayout={onLayout}>
       <Label>{children}</Label>
       <Ionicons
         style={styles.icon}
@@ -22,6 +25,7 @@ const styles = StyleSheet.create({
   selectContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   icon: {
     marginLeft: 5,

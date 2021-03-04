@@ -38,6 +38,16 @@ export const dateDisplay = (timestamp) => {
   return new Date(timestamp).toLocaleDateString('en-GB', options);
 };
 
+export const numericDate = (timestamp) => {
+  const options = {
+    // year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+
+  return new Date(timestamp).toLocaleDateString('en-GB', options);
+};
+
 export const timeDisplay = (timestamp) => {
   const options = {
     hour: 'numeric',

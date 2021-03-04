@@ -20,10 +20,10 @@ const SymptomTextInput = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.container}>
-        <Text style={styles.heading}>New symptom</Text>
+        <Text style={styles.heading}>Add a custom goal</Text>
         <View>
           <TextInput
-            placeholder="Symptom name"
+            placeholder="Goal name"
             returnKeyType="done"
             value={name.value}
             onChangeText={(text) => setName({ value: text, error: '' })}

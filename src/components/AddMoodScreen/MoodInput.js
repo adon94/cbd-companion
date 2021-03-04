@@ -8,6 +8,11 @@ import {
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const isBigPhone = windowHeight > 700;
+
+const boxSize = windowWidth * (isBigPhone ? 0.35 : 0.3);
 
 const MoodInput = ({ feels, symptom, setSymptoms }) => {
   const [rating, setRating] = useState();
@@ -42,7 +47,7 @@ const MoodInput = ({ feels, symptom, setSymptoms }) => {
 const styles = StyleSheet.create({
   symptomContainer: {
     paddingHorizontal: 0,
-    width: windowWidth * 0.8,
+    width: windowWidth * (isBigPhone ? 0.8 : 0.7), // leaves a space-between boxes of 10% ww
     marginLeft: 20,
   },
   symptomText: {
@@ -62,8 +67,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
-    height: windowWidth * 0.35,
-    width: windowWidth * 0.35,
+    height: boxSize,
+    width: boxSize,
     marginVertical: 10,
   },
   activeBox: {

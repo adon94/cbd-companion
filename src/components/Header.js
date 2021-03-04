@@ -4,8 +4,9 @@ import { theme } from '../core/theme';
 
 const windowWidth = Dimensions.get('window').width;
 
-const Header = ({ children, centered, lg }) => (
+const Header = ({ children, centered, lg, onLayout }) => (
   <Text
+    onLayout={onLayout}
     style={[styles.header, centered && styles.centered, lg && styles.large]}>
     {children}
   </Text>

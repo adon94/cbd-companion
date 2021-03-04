@@ -5,7 +5,7 @@ import { registerUser } from '../../api/auth';
 
 import KeyboardAvoiding from '../../components/KeyboardAvoiding';
 import Layout from '../../components/Layout';
-import Logo from '../../components/Logo';
+import Label from '../../components/Label';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
@@ -43,7 +43,7 @@ const Register = ({ navigation }) => {
       <KeyboardAvoiding container>
         <BackButton onPress={() => navigation.goBack()} />
         <View style={styles.headerContainer}>
-          <Logo />
+          {/* <Logo /> */}
           <Header>Create Account</Header>
         </View>
 
@@ -54,6 +54,7 @@ const Register = ({ navigation }) => {
           onChangeText={(text) => setName({ value: text, error: '' })}
           error={!!name.error}
           errorText={name.error}
+          autoCapitalize="words"
         />
 
         <TextInput
@@ -87,10 +88,8 @@ const Register = ({ navigation }) => {
         </Button>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.link}>Login</Text>
-          </TouchableOpacity>
+          <Label>Already have an account? </Label>
+          <Label onPress={() => navigation.navigate('Login')}>Login</Label>
         </View>
       </KeyboardAvoiding>
     </Layout>
@@ -101,21 +100,12 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
   },
-  label: {
-    color: theme.colors.label,
-    fontSize: 16,
-  },
   button: {
     marginTop: 24,
   },
   row: {
     flexDirection: 'row',
     marginTop: 4,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-    fontSize: 16,
   },
 });
 

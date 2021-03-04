@@ -4,8 +4,7 @@ import {
   View,
   FlatList,
   Dimensions,
-  Platform,
-  TouchableOpacity,
+  // TouchableOpacity,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -19,19 +18,19 @@ import { sendMoods } from '../../reducers/moodsReducer';
 import Layout from '../../components/Layout';
 import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
-import Title from '../../components/Title';
+// import Title from '../../components/Title';
 import MoodInput from '../../components/AddMoodScreen/MoodInput';
 import AddSymptomFooter from '../../components/AddMoodScreen/AddSymptomFooter';
 import Header from '../../components/Header';
 
 import LoadingScreen from '../LoadingScreen';
 
-const isIos = Platform.OS === 'ios';
-
 const feels = ['1', '2', '3', '4'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
+const isBigPhone = windowHeight > 700;
 
 const AddMood = ({ route, navigation }) => {
   const symptoms = useSelector((state) => state.symptoms.symptoms);
@@ -79,10 +78,10 @@ const AddMood = ({ route, navigation }) => {
       {beforeDose && <BackButton onPress={() => navigation.goBack()} />}
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
-          <TouchableOpacity onPress={() => navigation.navigate('AddDosage')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('AddDosage')}>
             <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
             <Title style={styles.smallTitle}>(Tap to change)</Title>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Header lg>{prompt}</Header>
         </View>
         {symptoms && symptoms.length > 0 ? (
@@ -93,6 +92,7 @@ const AddMood = ({ route, navigation }) => {
                 symptom={item}
                 setSymptoms={(rating) => updateIndexAt(rating, index)}
                 feels={feels}
+                isBigPhone={isBigPhone}
               />
             )}
             ListFooterComponent={() => (
@@ -101,7 +101,7 @@ const AddMood = ({ route, navigation }) => {
             keyExtractor={(symptom) => symptom.displayName}
             horizontal={true}
             snapToAlignment="start"
-            snapToInterval={windowWidth * 0.85}
+            snapToInterval={windowWidth * (isBigPhone ? 0.85 : 0.75)}
             decelerationRate="fast"
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingBottom: 0,
-    marginTop: isIos && windowHeight > 700 ? windowHeight / 15 : 0,
+    marginTop: isBigPhone ? windowHeight / 15 : 30,
     marginBottom: 20,
   },
   containerWithPadding: {

@@ -6,7 +6,7 @@ const usersRef = firestore().collection('Users');
 async function addMood(symptoms) {
   const date = new Date();
 
-  date.setDate(date.getDate() - 3);
+  // date.setDate(date.getDate() - 3);
 
   const timestamp = date.toISOString();
   const year = date.getFullYear();

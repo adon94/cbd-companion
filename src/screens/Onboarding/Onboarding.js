@@ -56,11 +56,10 @@ const Onboarding = ({ navigation }) => {
             />
           </Layout>
         </View>
-        <View style={styles.full} key="2">
+        {/* <View style={styles.full} key="2">
           <Layout noSafeView>
             <SafeAreaView style={styles.container}>
               <Header>Notifications?</Header>
-              {/* Enable notifications */}
             </SafeAreaView>
             <Footer
               backgroundColor="transparent"
@@ -70,8 +69,8 @@ const Onboarding = ({ navigation }) => {
               rightButtonPress={() => handlePageChange(2)}
             />
           </Layout>
-        </View>
-        <View style={styles.full} key="3">
+        </View> */}
+        <View style={styles.full} key="2">
           <Layout noSafeView>
             <SafeAreaView style={styles.container}>
               <Header>What CBD are you taking?</Header>
@@ -83,7 +82,7 @@ const Onboarding = ({ navigation }) => {
             <Footer
               backgroundColor="transparent"
               leftButtonLabel="Back"
-              leftButtonPress={() => handlePageChange(1)}
+              leftButtonPress={() => handlePageChange(0)}
               rightButtonLabel="Continue"
               rightButtonPress={submit}
             />
