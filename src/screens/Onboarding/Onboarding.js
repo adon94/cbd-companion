@@ -10,7 +10,7 @@ import Footer from '../../components/Footer';
 import CbdDetails from '../../components/CbdDetails';
 
 import { addOnboardInfo } from '../../api/database';
-import ds from './defaultSymptoms';
+import { ds } from './defaultOptions';
 import { setOnboarded } from '../../reducers/userReducer';
 
 const Onboarding = ({ navigation }) => {

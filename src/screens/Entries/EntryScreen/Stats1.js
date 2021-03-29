@@ -29,7 +29,7 @@ const Line = ({ line }) => (
 
 const Stats = ({ moods, average, displayDay }) => {
   const formatLabel = (y) => {
-    return y % 1 === 0 && y < 5 ? ratingReps[parseInt(y, 10) - 1] : '';
+    return y % 1 === 0 && y < 6 ? ratingReps[parseInt(y, 10) - 1] : '';
   };
   const data = moods.map((mood) => mood.rating); // dont forget
   const contentInset = { top: 20, bottom: 20 };
@@ -53,7 +53,7 @@ const Stats = ({ moods, average, displayDay }) => {
       {moods.length > 0 && (
         <View style={{ height: 200, flexDirection: 'row' }}>
           <YAxis
-            data={[1, 2, 3, 4]}
+            data={[1, 2, 3, 4, 5]}
             contentInset={contentInset}
             svg={{
               fill: theme.colors.accent,
@@ -77,9 +77,9 @@ const Stats = ({ moods, average, displayDay }) => {
                 },
               ]}>
               <AreaChart
-                yMax={4}
+                yMax={5}
                 yMin={1}
-                numberOfTicks={4}
+                numberOfTicks={5}
                 style={{ flex: 1 }}
                 data={data}
                 contentInset={contentInset}

@@ -1,27 +1,27 @@
-export const addNewSymptom = (payload) => ({
-  type: 'symptoms/add',
-  payload,
-});
+// export const addNewSymptom = (payload) => ({
+//   type: 'symptoms/add',
+//   payload,
+// });
 
-export const setNewSymptoms = (payload) => ({
-  type: 'symptoms/setAllSymptoms',
-  payload,
-});
+// export const setNewSymptoms = (payload) => ({
+//   type: 'symptoms/setAllSymptoms',
+//   payload,
+// });
 
-export const setCurrentSymptom = (payload) => ({
-  type: 'SET_CURRENT_SYMPTOM',
-  payload,
-});
+// export const setCurrentSymptom = (payload) => ({
+//   type: 'SET_CURRENT_SYMPTOM',
+//   payload,
+// });
 
-export const setUser = (payload) => ({
-  type: 'SET_USER',
-  payload,
-});
+// export const setUser = (payload) => ({
+//   type: 'SET_USER',
+//   payload,
+// });
 
-export const setOnboarded = (payload) => ({
-  type: 'SET_ONBOARDED',
-  payload,
-});
+// export const setOnboarded = (payload) => ({
+//   type: 'SET_ONBOARDED',
+//   payload,
+// });
 
 // export const getSymptoms = () => {
 //   return (dispatch, getState) => {

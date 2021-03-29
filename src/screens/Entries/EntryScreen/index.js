@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Dimensions, Animated } from 'react-native';
+import { StyleSheet, Text, View, Animated } from 'react-native';
 
 import Layout from '../../../components/Layout';
 import BackButton from '../../../components/BackButton';
@@ -11,17 +11,26 @@ import { ratingReps } from '../../../core/constants';
 import { getMoodsBySymptomOnDay } from '../../../api/database';
 import { theme } from '../../../core/theme';
 import ScrollHeader from '../../../components/ScrollHeader';
+import RatingButton from '../../../components/RatingButton';
 
 const HEADER_MIN_HEIGHT = 80;
 
 const EntryScreen = ({ route: { params: item }, navigation }) => {
   const average = Math.round(item.rating);
   const [moods, setMoods] = useState([]);
+  const [factors, setFactors] = useState([]);
 
   useEffect(() => {
     async function fetchMoods() {
       const moodData = await getMoodsBySymptomOnDay(item.symptomName, item.id);
-      setMoods(moodData);
+      setMoods(moodData.moods);
+      const factorList = [];
+      Object.keys(moodData.dayInfo).forEach((key) => {
+        if (key !== 'rating' && key !== 'date') {
+          factorList.push({ displayName: key, value: moodData.dayInfo[key] });
+        }
+      });
+      setFactors(factorList);
     }
     fetchMoods();
   }, []);
@@ -47,14 +56,35 @@ const EntryScreen = ({ route: { params: item }, navigation }) => {
                     Overall: {ratingReps[average - 1]}
                   </Text>
                   {moods.length > 1 && <Stats moods={moods} />}
+                  {/* {factors.length > 0 &&
+                    factors.map((factor) => (
+                      <Text style={styles.factorText}>{factor}</Text>
+                    ))} */}
+                  {/* <Text style={styles.emoji}>Your entries:</Text> */}
                 </>
               )}
               renderItem={({ item: moodEntry }) => (
                 <EntryItem item={moodEntry} key={item.timestamp} />
               )}
+              ListFooterComponent={() => (
+                <>
+                  {factors.length > 0 &&
+                    factors.map((factor) => (
+                      <View style={styles.factorItem} key={factor.displayName}>
+                        <Text style={styles.factorText}>
+                          {factor.displayName}
+                        </Text>
+                        <RatingButton isLifestyle>
+                          {factor.value ? 'Yes' : 'No'}
+                        </RatingButton>
+                      </View>
+                    ))}
+                </>
+              )}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.flatList}
+              numColumns={4}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { y: scrollY } } }], // event.nativeEvent.contentOffset.x to scrollX
                 { useNativeDriver: true }, // use native driver for animation
@@ -80,6 +110,10 @@ const styles = StyleSheet.create({
   flatList: {
     paddingTop: 70, // distance from headercontainer
   },
+  factorItem: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   title: {
     color: '#fff',
     fontSize: 20,
@@ -91,6 +125,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: theme.colors.accent,
+  },
+  factorText: {
+    marginTop: 20,
+    fontSize: 22,
+    color: theme.colors.accent,
+    textAlign: 'center',
   },
   heading: {
     color: '#fff',

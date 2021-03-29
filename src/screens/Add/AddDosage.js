@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,25 +6,31 @@ import {
   Text,
   Platform,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { store } from '../../core/store';
+// import { store } from '../../core/store';
 import { timeDisplay } from '../../core/utils';
+import { sendMoods } from '../../reducers/moodsReducer';
+import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
 
 import Layout from '../../components/Layout';
-import { ADD_DOSAGE } from '../../core/store';
+// import { ADD_DOSAGE } from '../../core/store';
 import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
 import CheckboxInput from '../../components/CheckboxInput';
 
 const AddDosage = ({ navigation }) => {
-  const globalState = useContext(store);
+  // const globalState = useContext(store);
+  const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
   const [show, setShow] = useState(false);
   const [checked, setChecked] = useState(true);
   const [dosage, setDosage] = useState({
     timestamp: new Date().toISOString(),
     amount: 16,
   });
+  const dispatch = useDispatch();
 
   const onChange = (event, selectedDate) => {
     const timestamp = selectedDate.toISOString() || dosage.timestamp;
@@ -33,18 +39,24 @@ const AddDosage = ({ navigation }) => {
   };
 
   const submit = async () => {
-    const { dispatch } = globalState;
-    dispatch({ type: ADD_DOSAGE, payload: dosage });
-    navigation.navigate('AddMood', {
-      beforeDose: true,
-    });
+    try {
+      const resultAction = await dispatch(
+        sendMoods({ symptoms, lifestyleFactors }),
+      );
+      if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchSymptomsWithMoods());
+        navigation.navigate('Entries');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <Layout>
       <BackButton onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <Text style={styles.questionText}>Change my dosage</Text>
+        <Text style={styles.questionText}>My CBD dosage</Text>
         <View>
           <TouchableOpacity style={styles.softButton} onPress={() => submit()}>
             <Text style={styles.buttonText}>{dosage.amount}mg</Text>
@@ -68,12 +80,12 @@ const AddDosage = ({ navigation }) => {
               {show ? 'Done' : timeDisplay(dosage.timestamp)}
             </Text>
           </TouchableOpacity>
-          <CheckboxInput checked={checked} setChecked={setChecked}>
+          {/* <CheckboxInput checked={checked} setChecked={setChecked}>
             Set daily reminder to this time
-          </CheckboxInput>
+          </CheckboxInput> */}
         </View>
         <Button onPress={() => submit()}>
-          <Text style={styles.buttonText}>Next</Text>
+          <Text style={styles.buttonText}>Done</Text>
         </Button>
       </View>
     </Layout>

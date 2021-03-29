@@ -3,11 +3,11 @@ import auth from '@react-native-firebase/auth';
 
 const usersRef = firestore().collection('Users');
 
-async function addMood(symptoms) {
+async function addMood(symptoms, lifestyleFactors) {
   const date = new Date();
 
   // date.setDate(date.getDate() - 3);
-
+  // const timestamp = firestore.FieldValue.serverTimestamp();
   const timestamp = date.toISOString();
   const year = date.getFullYear();
   let month = date.getMonth() + 1;
@@ -38,6 +38,25 @@ async function addMood(symptoms) {
 
     batch.set(ref, {
       ...symptom,
+      timestamp,
+    });
+  });
+
+  const factorsObj = {};
+
+  // add each lifestyle factor for today with it's value
+  lifestyleFactors.forEach((factor) => {
+    const ref = usersRef
+      .doc(user.uid)
+      .collection('lifestyleFactors')
+      .doc(factor.displayName)
+      .collection('days')
+      .doc(today);
+
+    factorsObj[factor.displayName] = factor.rating === 2;
+
+    batch.set(ref, {
+      ...factor,
       timestamp,
     });
   });
@@ -73,8 +92,10 @@ async function addMood(symptoms) {
           .doc(today);
 
         batch2.set(ref, {
+          ...factorsObj,
           rating: totalRating / todaysMoods.size,
           date: today,
+          // add lifestyle factors here too to make it easier for graphs
         });
       });
     }
@@ -106,7 +127,19 @@ async function getMoodsBySymptom(symptomName) {
 async function getMoodsBySymptomOnDay(symptomName, date) {
   const moods = [];
   const user = auth().currentUser;
-  return usersRef
+
+  const dayInfo = await usersRef
+    .doc(user.uid)
+    .collection('symptoms')
+    .doc(symptomName)
+    .collection('days')
+    .doc(date)
+    .get()
+    .then((documentSnapshot) => {
+      return documentSnapshot.data();
+    });
+
+  await usersRef
     .doc(user.uid)
     .collection('symptoms')
     .doc(symptomName)
@@ -122,6 +155,8 @@ async function getMoodsBySymptomOnDay(symptomName, date) {
       }
       return moods;
     });
+
+    return { moods, dayInfo };
 }
 
 async function addOnboardInfo(symptoms, cbdDetails) {
@@ -143,7 +178,6 @@ async function addOnboardInfo(symptoms, cbdDetails) {
 }
 
 async function changeMultipleSymptoms(toAdd, toRemove) {
-  console.log(toAdd);
   const user = auth().currentUser;
 
   const batch = firestore().batch();
@@ -201,6 +235,60 @@ async function getSymptoms() {
     });
 }
 
+async function addLifestyle(lifestyleFactor) {
+  const user = auth().currentUser;
+  await usersRef
+    .doc(user.uid)
+    .collection('lifestyleFactors')
+    .doc(lifestyleFactor)
+    .set({
+      displayName: lifestyleFactor,
+    });
+}
+
+async function getLifestyle() {
+  const user = auth().currentUser;
+  const lifestyle = [];
+  return await usersRef
+    .doc(user.uid)
+    .collection('lifestyleFactors')
+    .get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach((documentSnapshot) => {
+          lifestyle.push(documentSnapshot.data());
+        });
+      }
+      return lifestyle;
+    });
+}
+
+async function changeMultipleLifestyles(toAdd, toRemove) {
+  const user = auth().currentUser;
+
+  const batch = firestore().batch();
+
+  const userRef = usersRef.doc(user.uid);
+
+  toAdd.forEach(({ displayName }) => {
+    const lifestyleRef = userRef
+      .collection('lifestyleFactors')
+      .doc(displayName);
+
+    batch.set(lifestyleRef, { displayName });
+  });
+
+  toRemove.forEach(({ displayName }) => {
+    const lifestyleRef = userRef
+      .collection('lifestyleFactors')
+      .doc(displayName);
+
+    batch.delete(lifestyleRef, { displayName });
+  });
+
+  await batch.commit();
+}
+
 export {
   addMood,
   getMoodsBySymptom,
@@ -210,4 +298,7 @@ export {
   addOnboardInfo,
   isOnboarded,
   changeMultipleSymptoms,
+  getLifestyle,
+  addLifestyle,
+  changeMultipleLifestyles,
 };

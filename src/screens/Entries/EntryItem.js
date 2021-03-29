@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from '../../core/theme';
 import { dateDisplay, timeDisplay } from '../../core/utils';
 import { ratingReps } from '../../core/constants';
+import RatingButton from '../../components/RatingButton';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
   const rating = Math.round(item.rating);
@@ -41,8 +42,11 @@ const EntryItem = ({ item, symptomName, navigation }) => {
   }
 
   return (
-    <View style={styles.card}>
-      <EntryContent />
+    <View style={styles.plainContainer}>
+      <RatingButton>{ratingReps[rating - 1]}</RatingButton>
+      <View style={styles.textContainer}>
+        <Text style={styles.dateText}>{dateTime}</Text>
+      </View>
     </View>
   );
 };
@@ -56,6 +60,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  plainContainer: {
+    // backgroundColor: '#f0f0f04D',
+    padding: 20,
+    borderRadius: 16,
+    flex: 1,
+    marginVertical: 10,
+    alignItems: 'center',
+    // flexDirection: 'row',
   },
   emoji: {
     fontSize: 30,

@@ -4,18 +4,15 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
-const isBigPhone = windowHeight > 700;
+const boxSize = 40;
 
-const AddSymptomFooter = ({ navigation }) => {
+const AddItemFooter = ({ onPress, children }) => {
   return (
     <View style={styles.symptomContainer}>
-      <Text style={styles.symptomText}>Something else...</Text>
-      <TouchableOpacity
-        style={styles.boxesContainer}
-        onPress={() => navigation.navigate('AddSymptom')}>
-        <Ionicons name="add" size={80} color="#ffffff" />
+      <Text style={styles.symptomText}>{children}</Text>
+      <TouchableOpacity style={styles.boxesContainer} onPress={onPress}>
+        <Ionicons name="add" size={windowWidth / 17} color="#ffffff" />
       </TouchableOpacity>
     </View>
   );
@@ -24,22 +21,24 @@ const AddSymptomFooter = ({ navigation }) => {
 const styles = StyleSheet.create({
   symptomContainer: {
     paddingHorizontal: 20,
-    width: windowWidth * (isBigPhone ? 0.8 : 0.7),
+    marginTop: 35,
+    alignItems: 'center',
   },
   symptomText: {
     color: '#fff',
     fontSize: 25,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   boxesContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30,
-    height: windowWidth * (isBigPhone ? 0.75 : 0.65),
-    marginVertical: 10,
+    marginTop: 10,
     backgroundColor: '#f0f0f04D',
-    borderRadius: 25,
+    borderRadius: 100,
+    height: boxSize,
+    width: boxSize,
   },
 });
 
-export default AddSymptomFooter;
+export default AddItemFooter;

@@ -6,15 +6,14 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
+import RatingButton from '../RatingButton';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const boxSize = windowWidth * (isBigPhone ? 0.35 : 0.3);
-
-const MoodInput = ({ feels, symptom, setSymptoms }) => {
+const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
   const [rating, setRating] = useState();
 
   const setActive = (index) => {
@@ -27,17 +26,20 @@ const MoodInput = ({ feels, symptom, setSymptoms }) => {
     }
   };
 
+  const boxSize = isLifestyle ? 60 : 40;
+
   return (
     <View style={styles.symptomContainer}>
       <Text style={styles.symptomText}>{symptom.displayName}</Text>
       <View style={styles.boxesContainer}>
         {feels.map((feel, index) => (
-          <TouchableOpacity
+          <RatingButton
             key={feel}
-            style={[styles.feelBox, index + 1 === rating && styles.activeBox]}
+            active={index + 1 === rating}
+            isLifestyle={isLifestyle}
             onPress={() => setActive(index)}>
-            <Text style={styles.feelText}>{feel}</Text>
-          </TouchableOpacity>
+            {feel}
+          </RatingButton>
         ))}
       </View>
     </View>
@@ -47,39 +49,38 @@ const MoodInput = ({ feels, symptom, setSymptoms }) => {
 const styles = StyleSheet.create({
   symptomContainer: {
     paddingHorizontal: 0,
-    width: windowWidth * (isBigPhone ? 0.8 : 0.7), // leaves a space-between boxes of 10% ww
-    marginLeft: 20,
+    marginTop: 35,
+    width: windowWidth * (isBigPhone ? 0.95 : 0.95), // leaves a space-between boxes of 10% ww
   },
   symptomText: {
     color: '#fff',
     fontSize: windowWidth / 17,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   boxesContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignContent: 'space-between',
-    marginRight: 20,
+    justifyContent: 'center',
+    marginHorizontal: 40,
+    marginTop: 5,
   },
   feelBox: {
     backgroundColor: '#f0f0f04D',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 25,
-    height: boxSize,
-    width: boxSize,
+    borderRadius: 40,
     marginVertical: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
   activeBox: {
     backgroundColor: '#009432',
   },
   feelText: {
     color: '#ffffff',
-    fontSize: windowWidth / 6,
+    fontSize: windowWidth / 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    padding: 25,
   },
 });
 

@@ -12,9 +12,6 @@ const KeyboardAvoiding = ({ children, container }) => {
 };
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-  },
   keyboardAvoiding: {
     flex: 1,
   },

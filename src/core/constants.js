@@ -1,1 +1,1 @@
-export const ratingReps = ['1', '2', '3', '4'];
+export const ratingReps = ['1', '2', '3', '4', '5'];

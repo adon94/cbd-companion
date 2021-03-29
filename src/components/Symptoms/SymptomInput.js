@@ -16,6 +16,11 @@ import {
   setAllSymptoms,
 } from '../../reducers/symptomsReducer';
 
+import {
+  addLifestyle as addNewLifestyle,
+  setAllLifestyle,
+} from '../../reducers/lifestyleReducer';
+
 const Row = ({ symptom, onPress, icon }) => {
   return (
     <View style={styles.rowContainer} key={symptom.displayName}>
@@ -29,8 +34,15 @@ const Row = ({ symptom, onPress, icon }) => {
   );
 };
 
-const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
-  const symptoms = useSelector((state) => state.symptoms.symptoms);
+const SymptomInput = ({
+  defaultSymptoms,
+  setDefaultSymptoms,
+  navigation,
+  isLifestyle,
+}) => {
+  const symptoms = useSelector((state) =>
+    isLifestyle ? state.lifestyle.lifestyle : state.symptoms.symptoms,
+  );
   const dispatch = useDispatch();
 
   const addToDefault = (symp) => {
@@ -41,7 +53,8 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
     const newArr = [...defaultSymptoms];
     newArr.splice(index, 1);
     setDefaultSymptoms(newArr);
-    dispatch(addNewSymptom({ ...symp, new: true }));
+    const newValue = { ...symp, new: true };
+    dispatch(isLifestyle ? addNewLifestyle(newValue) : addNewSymptom(newValue));
   };
 
   const checkIfExisting = (symp, i) => {
@@ -67,7 +80,7 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
   const removeSymptom = (symp, i) => {
     const newArr2 = [...symptoms];
     newArr2.splice(i, 1);
-    dispatch(setAllSymptoms(newArr2));
+    dispatch(isLifestyle ? setAllLifestyle(newArr2) : setAllSymptoms(newArr2));
 
     addToDefault(symp.new ? symp : { ...symp, existing: true });
   };
@@ -105,7 +118,9 @@ const SymptomInput = ({ defaultSymptoms, setDefaultSymptoms, navigation }) => {
         <View style={styles.iconContainer}>
           <Ionicons name="add-circle-outline" size={40} color="#ffffff" />
         </View>
-        <Text style={styles.plainText}>Add a custom goal</Text>
+        <Text style={styles.plainText}>
+          {isLifestyle ? 'Add a lifestyle factor' : 'Add a custom goal'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -135,6 +150,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     color: '#ffffff',
     fontSize: 20,
+    flexShrink: 1,
   },
   rowContainer: {
     flexDirection: 'row',
