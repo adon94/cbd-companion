@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useState } from 'react/cjs/react.development';
-import Stats from './EntryScreen/Stats1';
+import MoodChart from '../charts/MoodChart';
+
+import { getMonday } from '../../core/utils';
 
 const WEEK = 'This week';
 const OVERALL = 'Overall';
@@ -11,15 +13,7 @@ const HomeGraph = ({ moods }) => {
   let data = [];
 
   if (view === WEEK) {
-    function getMonday(d) {
-      d = new Date(d);
-      const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
-    }
-
-    const monday = getMonday(new Date());
-    monday.setHours(0, 0, 0, 0);
+    const monday = getMonday();
     const thisWeek = [];
     moods.some((el) => {
       const notThisWeek = new Date(el.date) < monday;
@@ -50,7 +44,7 @@ const HomeGraph = ({ moods }) => {
         </Text>
       </TouchableOpacity>
       {showStats && (
-        <Stats moods={data.reverse()} displayDay={view === WEEK} average />
+        <MoodChart moods={data.reverse()} displayDay={view === WEEK} average />
       )}
     </View>
   );

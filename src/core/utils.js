@@ -61,3 +61,12 @@ export const getDayName = (dateStr, locale) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString(locale, { weekday: 'short' });
 };
+
+export const getMonday = () => {
+  const d = new Date();
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+  const monday = new Date(d.setDate(diff));
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+};

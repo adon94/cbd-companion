@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setViewingSymptom } from '../../reducers/viewingSymptomReducer';
+import { setViewingSymptom } from '../../../reducers/viewingSymptomReducer';
 
-import Layout from '../../components/Layout';
-import Button from '../../components/Button';
+import Layout from '../../../components/Layout';
+import Button from '../../../components/Button';
 
 const screenWidth = Dimensions.get('window').width;
 

@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Add from '../Add';
+import Add from '../Add/AddTab';
 import Stats from '../Stats';
-import Entries from '../Entries';
-import Onboarding from '../Onboarding';
+import Entries from '../Entries/EntriesTab';
+import Onboarding from '../Onboarding/OnboardingRoot';
 
 const Tab = createBottomTabNavigator();
 

@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from '../../core/theme';
 import { dateDisplay, timeDisplay } from '../../core/utils';
 import { ratingReps } from '../../core/constants';
-import RatingButton from '../../components/RatingButton';
+import RatingButton from '../RatingButton';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
   const rating = Math.round(item.rating);

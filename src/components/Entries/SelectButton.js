@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Label from '../../components/Label';
+import Label from '../Label';
 
 const SelectButton = ({ onPress, children, onLayout }) => {
   return (

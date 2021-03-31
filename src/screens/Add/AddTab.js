@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SymptomTextInput from './SymptomTextInput';
-import AddMood from './AddMood';
-import AddDosage from './AddDosage';
-import AddLifestyle from './AddLifestyle';
+import SymptomTextInput from './CustomInput/CustomInput';
+import AddMood from './AddMood/AddMood';
+import AddDosage from './AddDosage/AddDosage';
+import AddLifestyle from './AddLifestyle/AddLifestyle';
 import AddSymptom from './AddSymptom/AddSymptom';
 
 const Stack = createStackNavigator();

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-import TextInput from '../components/TextInput';
-import CheckboxInput from '../components/CheckboxInput';
+import TextInput from '../TextInput';
+import CheckboxInput from '../CheckboxInput';
 
 const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
   const [unavailable, setUnavailable] = useState(false);

@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import { AreaChart, Grid, YAxis, XAxis } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { Circle, Path } from 'react-native-svg';
-import { getDayName, timeDisplay, numericDate } from '../../../core/utils';
-import { theme } from '../../../core/theme';
-import { ratingReps } from '../../../core/constants';
-import { useRef } from 'react';
+import { getDayName, timeDisplay, numericDate } from '../../core/utils';
+import { theme } from '../../core/theme';
+import { ratingReps } from '../../core/constants';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -27,7 +26,7 @@ const Line = ({ line }) => (
   <Path d={line} stroke={theme.colors.primary} fill={'none'} />
 );
 
-const Stats = ({ moods, average, displayDay }) => {
+const MoodChart = ({ moods, average, displayDay }) => {
   const formatLabel = (y) => {
     return y % 1 === 0 && y < 6 ? ratingReps[parseInt(y, 10) - 1] : '';
   };
@@ -121,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Stats;
+export default MoodChart;

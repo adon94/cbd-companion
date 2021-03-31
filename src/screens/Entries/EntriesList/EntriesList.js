@@ -11,15 +11,15 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { signOut } from '../../api/auth';
-import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
+import { signOut } from '../../../api/auth';
+import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 
-import EntryItem from './EntryItem';
-import SelectSymptom from './SelectButton';
-import HomeGraph from './HomeGraph';
-import LoadingScreen from '../LoadingScreen';
+import EntryItem from '../../../components/Entries/EntryItem';
+import SelectSymptom from '../../../components/Entries/SelectButton';
+import HomeGraph from '../../../components/Entries/HomeGraph';
+import LoadingScreen from '../../LoadingScreen';
 import LinearGradient from 'react-native-linear-gradient';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;

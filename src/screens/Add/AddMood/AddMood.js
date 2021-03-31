@@ -2,44 +2,48 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
 import {
-  fetchLifestyle,
-  setAllLifestyle,
-} from '../../reducers/lifestyleReducer';
-import { sendMoods } from '../../reducers/moodsReducer';
+  setAllSymptoms,
+  fetchSymptoms,
+  fetchSymptomsWithMoods,
+} from '../../../reducers/symptomsReducer';
+import { sendMoods } from '../../../reducers/moodsReducer';
 
-import Layout from '../../components/Layout';
-import Button from '../../components/Button';
-import MoodInput from '../../components/AddMoodScreen/MoodInput';
-import AddItemFooter from '../../components/AddMoodScreen/AddItemFooter';
-import Header from '../../components/Header';
+import Layout from '../../../components/Layout';
+import BackButton from '../../../components/BackButton';
+import Button from '../../../components/Button';
+import MoodInput from '../../../components/AddMoodScreen/MoodInput';
+import AddItemFooter from '../../../components/AddMoodScreen/AddItemFooter';
+import Header from '../../../components/Header';
 
-import LoadingScreen from '../LoadingScreen';
+import LoadingScreen from '../../LoadingScreen';
 
-const feels = ['No', 'Yes'];
+const feels = ['1', '2', '3', '4', '5'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
 const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const AddLifestyle = ({ navigation }) => {
-  const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
+const AddMood = ({ route, navigation }) => {
   const symptoms = useSelector((state) => state.symptoms.symptoms);
   const dispatch = useDispatch();
   const moodsStatus = useSelector((state) => state.moods.status);
+  // const [symptoms, setSymptoms] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchLifestyle());
+    dispatch(fetchSymptoms());
   }, [dispatch]);
 
+  const beforeDose = route.params ? route.params.beforeDose : false;
+
+  const prompt = beforeDose
+    ? 'How did you feel before dosing?'
+    : 'How are you feeling?';
+
   const submit = async () => {
-    // navigation.navigate('');
-    navigation.navigate('AddDosage');
+    navigation.navigate('AddLifestyle');
     // try {
-    //   const resultAction = await dispatch(
-    //     sendMoods({ symptoms, lifestyleFactors }),
-    //   );
+    //   const resultAction = await dispatch(sendMoods(symptoms));
     //   if (resultAction.meta.requestStatus === 'fulfilled') {
     //     dispatch(fetchSymptomsWithMoods());
     //     navigation.navigate('Entries');
@@ -50,12 +54,12 @@ const AddLifestyle = ({ navigation }) => {
   };
 
   const updateIndexAt = (rating, index) => {
-    let newArr = [...lifestyleFactors];
+    let newArr = [...symptoms];
     newArr[index] = {
       ...newArr[index],
       rating,
     };
-    dispatch(setAllLifestyle(newArr));
+    dispatch(setAllSymptoms(newArr));
   };
 
   if (moodsStatus === 'loading') {
@@ -64,6 +68,7 @@ const AddLifestyle = ({ navigation }) => {
 
   return (
     <Layout>
+      {beforeDose && <BackButton onPress={() => navigation.goBack()} />}
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
           {/* <TouchableOpacity
@@ -72,44 +77,39 @@ const AddLifestyle = ({ navigation }) => {
             <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
             <Title style={styles.smallTitle}>(Tap to change)</Title>
           </TouchableOpacity> */}
-          <Header centered>Lifestyle Factors</Header>
+          <Header centered>{prompt}</Header>
         </View>
-        {lifestyleFactors && lifestyleFactors.length > 0 ? (
+        {symptoms && symptoms.length > 0 ? (
           <FlatList
-            data={lifestyleFactors}
+            data={symptoms}
             renderItem={({ item, index }) => (
               <MoodInput
                 symptom={item}
                 setSymptoms={(rating) => updateIndexAt(rating, index)}
                 feels={feels}
                 isBigPhone={isBigPhone}
-                isLifestyle
               />
             )}
             ListFooterComponent={() => (
-              <AddItemFooter
-                onPress={() =>
-                  navigation.navigate('AddSymptom', { isLifestyle: true })
-                }>
-                Add other factors
+              <AddItemFooter onPress={() => navigation.navigate('AddSymptom')}>
+                Add a new goal
               </AddItemFooter>
             )}
             keyExtractor={(symptom) => symptom.displayName}
+            // horizontal={true}
+            // snapToAlignment="start"
+            // snapToInterval={windowWidth * (isBigPhone ? 0.85 : 0.75)}
             decelerationRate="fast"
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.flatList}
           />
         ) : (
-          <AddItemFooter
-            onPress={() =>
-              navigation.navigate('AddSymptom', { isLifestyle: true })
-            }>
-            Add lifestyle factors
+          <AddItemFooter onPress={() => navigation.navigate('AddSymptom')}>
+            Add a new goal
           </AddItemFooter>
         )}
         <View style={[styles.containerWithPadding, styles.buttonContainer]}>
-          <Button onPress={() => navigation.goBack()}>Back</Button>
           <Button onPress={submit}>Next</Button>
         </View>
       </View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonContainer: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     flexDirection: 'row',
   },
   smallTitle: {
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddLifestyle;
+export default AddMood;

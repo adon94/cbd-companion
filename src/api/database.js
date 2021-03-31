@@ -1,6 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+import { getMonday } from '../core/utils';
+
 const usersRef = firestore().collection('Users');
 
 async function addMood(symptoms, lifestyleFactors) {
@@ -124,6 +126,32 @@ async function getMoodsBySymptom(symptomName) {
     });
 }
 
+async function getWeeklyMoods(symptomName) {
+  const moods = [];
+  const user = auth().currentUser;
+  const monday = getMonday();
+  return usersRef
+    .doc(user.uid)
+    .collection('symptoms')
+    .doc(symptomName)
+    .collection('days')
+    .orderBy('date', 'desc')
+    .limit(7)
+    .get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data();
+          const isThisWeek = new Date(docData.date) >= monday;
+          if (isThisWeek) {
+            moods.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+          }
+        });
+      }
+      return moods;
+    });
+}
+
 async function getMoodsBySymptomOnDay(symptomName, date) {
   const moods = [];
   const user = auth().currentUser;
@@ -156,7 +184,7 @@ async function getMoodsBySymptomOnDay(symptomName, date) {
       return moods;
     });
 
-    return { moods, dayInfo };
+  return { moods, dayInfo };
 }
 
 async function addOnboardInfo(symptoms, cbdDetails) {
@@ -301,4 +329,5 @@ export {
   getLifestyle,
   addLifestyle,
   changeMultipleLifestyles,
+  getWeeklyMoods,
 };

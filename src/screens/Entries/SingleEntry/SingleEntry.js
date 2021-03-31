@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Animated } from 'react-native';
 
 import Layout from '../../../components/Layout';
 import BackButton from '../../../components/BackButton';
-import EntryItem from '../EntryItem';
-import Stats from './Stats1';
+import EntryItem from '../../../components/Entries/EntryItem';
+import Stats from '../../../components/charts/MoodChart';
 
 import { dateDisplay } from '../../../core/utils';
 import { ratingReps } from '../../../core/constants';
@@ -15,7 +15,7 @@ import RatingButton from '../../../components/RatingButton';
 
 const HEADER_MIN_HEIGHT = 80;
 
-const EntryScreen = ({ route: { params: item }, navigation }) => {
+const SingleEntry = ({ route: { params: item }, navigation }) => {
   const average = Math.round(item.rating);
   const [moods, setMoods] = useState([]);
   const [factors, setFactors] = useState([]);
@@ -147,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EntryScreen;
+export default SingleEntry;

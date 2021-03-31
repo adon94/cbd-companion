@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { addNewSymptom } from '../../actions';
+import { addNewSymptom } from '../../../actions';
 
-import Layout from '../../components/Layout';
-import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
+import Layout from '../../../components/Layout';
+import Button from '../../../components/Button';
+import TextInput from '../../../components/TextInput';
 
-const SymptomTextInput = ({ navigation }) => {
+const CustomInput = ({ navigation }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState({ value: '', error: '' });
 
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SymptomTextInput;
+export default CustomInput;

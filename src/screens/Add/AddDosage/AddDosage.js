@@ -10,15 +10,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 // import { store } from '../../core/store';
-import { timeDisplay } from '../../core/utils';
-import { sendMoods } from '../../reducers/moodsReducer';
-import { fetchSymptomsWithMoods } from '../../reducers/symptomsReducer';
+import { timeDisplay } from '../../../core/utils';
+import { sendMoods } from '../../../reducers/moodsReducer';
+import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 // import { ADD_DOSAGE } from '../../core/store';
-import Button from '../../components/Button';
-import BackButton from '../../components/BackButton';
-import CheckboxInput from '../../components/CheckboxInput';
+import Button from '../../../components/Button';
+import BackButton from '../../../components/BackButton';
+import CheckboxInput from '../../../components/CheckboxInput';
 
 const AddDosage = ({ navigation }) => {
   // const globalState = useContext(store);

@@ -7,7 +7,7 @@ import Layout from '../../components/Layout';
 import SymptomInput from '../../components/Symptoms/SymptomInput';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import CbdDetails from '../../components/CbdDetails';
+import CbdDetails from '../../components/Onboarding/CbdDetails';
 
 import { addOnboardInfo } from '../../api/database';
 import { ds } from './defaultOptions';
