@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-import { getMonday } from '../core/utils';
+import { getMonday, getTodayString } from '../core/utils';
 
 const usersRef = firestore().collection('Users');
 
@@ -11,19 +11,10 @@ async function addMood(symptoms, lifestyleFactors) {
   // date.setDate(date.getDate() - 3);
   // const timestamp = firestore.FieldValue.serverTimestamp();
   const timestamp = date.toISOString();
-  const year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let dt = date.getDate();
+  const today = getTodayString(date);
 
-  if (dt < 10) {
-    dt = '0' + dt;
-  }
-  if (month < 10) {
-    month = '0' + month;
-  }
-
-  const today = `${year}-${month}-${dt}`;
   const user = auth().currentUser;
+  const userDayRef = usersRef.doc(user.uid).collection('days').doc(today);
 
   const batch = firestore().batch();
 
@@ -34,11 +25,18 @@ async function addMood(symptoms, lifestyleFactors) {
       .collection('symptoms')
       .doc(symptom.displayName)
       .collection('days')
-      .doc(today)
-      .collection('moods')
-      .doc(timestamp);
+      .doc(today);
 
     batch.set(ref, {
+      ...symptom,
+      timestamp,
+    });
+
+    const daySymptomsRef = userDayRef
+      .collection('symptoms')
+      .doc(symptom.displayName);
+
+    batch.set(daySymptomsRef, {
       ...symptom,
       timestamp,
     });
@@ -61,49 +59,18 @@ async function addMood(symptoms, lifestyleFactors) {
       ...factor,
       timestamp,
     });
+
+    const dayLifestyleRef = userDayRef
+      .collection('lifestyleFactors')
+      .doc(factor.displayName);
+
+    batch.set(dayLifestyleRef, {
+      ...factor,
+      timestamp,
+    });
   });
 
   await batch.commit();
-
-  const batch2 = firestore().batch();
-
-  // for each symptom tracked today, set the average rating
-  for (const symptom of symptoms) {
-    if (symptom.rating) {
-      const todaysMoods = await usersRef
-        .doc(user.uid)
-        .collection('symptoms')
-        .doc(symptom.displayName)
-        .collection('days')
-        .doc(today)
-        .collection('moods')
-        .get();
-
-      let totalRating = 0;
-
-      todaysMoods.forEach((documentSnapshot) => {
-        const day = documentSnapshot.data();
-
-        totalRating += day.rating;
-
-        const ref = usersRef
-          .doc(user.uid)
-          .collection('symptoms')
-          .doc(symptom.displayName)
-          .collection('days')
-          .doc(today);
-
-        batch2.set(ref, {
-          ...factorsObj,
-          rating: totalRating / todaysMoods.size,
-          date: today,
-          // add lifestyle factors here too to make it easier for graphs
-        });
-      });
-    }
-  }
-
-  await batch2.commit();
 }
 
 async function getMoodsBySymptom(symptomName) {

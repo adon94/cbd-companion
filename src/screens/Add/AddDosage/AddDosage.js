@@ -56,7 +56,7 @@ const AddDosage = ({ navigation }) => {
     <Layout>
       <BackButton onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <Text style={styles.questionText}>My CBD dosage</Text>
+        <Text style={styles.questionText}>Confirm dosage</Text>
         <View>
           <TouchableOpacity style={styles.softButton} onPress={() => submit()}>
             <Text style={styles.buttonText}>{dosage.amount}mg</Text>
@@ -80,9 +80,6 @@ const AddDosage = ({ navigation }) => {
               {show ? 'Done' : timeDisplay(dosage.timestamp)}
             </Text>
           </TouchableOpacity>
-          {/* <CheckboxInput checked={checked} setChecked={setChecked}>
-            Set daily reminder to this time
-          </CheckboxInput> */}
         </View>
         <Button onPress={() => submit()}>
           <Text style={styles.buttonText}>Done</Text>

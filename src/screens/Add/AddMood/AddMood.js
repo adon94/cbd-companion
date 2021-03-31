@@ -28,6 +28,8 @@ const AddMood = ({ route, navigation }) => {
   const symptoms = useSelector((state) => state.symptoms.symptoms);
   const dispatch = useDispatch();
   const moodsStatus = useSelector((state) => state.moods.status);
+  const moods = useSelector((state) => state.moods.moods);
+  console.log('lol', moods[0]);
   // const [symptoms, setSymptoms] = useState([]);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const AddMood = ({ route, navigation }) => {
 
   const prompt = beforeDose
     ? 'How did you feel before dosing?'
-    : 'How are you feeling?';
+    : 'How did you feel today?';
 
   const submit = async () => {
     navigation.navigate('AddLifestyle');
@@ -96,9 +98,6 @@ const AddMood = ({ route, navigation }) => {
               </AddItemFooter>
             )}
             keyExtractor={(symptom) => symptom.displayName}
-            // horizontal={true}
-            // snapToAlignment="start"
-            // snapToInterval={windowWidth * (isBigPhone ? 0.85 : 0.75)}
             decelerationRate="fast"
             pagingEnabled
             showsHorizontalScrollIndicator={false}
