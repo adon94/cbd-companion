@@ -127,6 +127,7 @@ const Entries = ({ navigation }) => {
           )}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={styles.flatList}
+          numColumns={4}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }], // event.nativeEvent.contentOffset.x to scrollX
             { useNativeDriver: true }, // use native driver for animation
@@ -176,6 +177,7 @@ const styles = StyleSheet.create({
   flatList: {
     paddingTop: HEADER_MAX_HEIGHT + 25,
     paddingHorizontal: 20,
+    alignItems: 'center',
   },
   logout: {
     color: '#fff',

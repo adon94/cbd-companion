@@ -50,7 +50,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
   return (
     <View style={styles.container}>
       {moods.length > 0 && (
-        <View style={{ height: 200, flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row' }}>
           <YAxis
             data={[1, 2, 3, 4, 5]}
             contentInset={contentInset}
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 0,
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   chartContainer: {
     flex: 1,

@@ -2,15 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { theme } from '../../core/theme';
-import { dateDisplay, timeDisplay } from '../../core/utils';
+import { getDayName, timeDisplay } from '../../core/utils';
 import { ratingReps } from '../../core/constants';
 import RatingButton from '../RatingButton';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
   const rating = Math.round(item.rating);
-  // const dateTime = navigation
-  //   ? dateDisplay(item.date)
-  //   : timeDisplay(item.timestamp);
 
   const EntryContent = () => (
     <>
@@ -18,7 +15,7 @@ const EntryItem = ({ item, symptomName, navigation }) => {
         <Text style={styles.emoji}>{ratingReps[rating - 1]}</Text>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.dateText}>{dateDisplay(item.timestamp)}</Text>
+        <Text style={styles.dateText}>{getDayName(item.timestamp)}</Text>
       </View>
     </>
   );
@@ -53,36 +50,29 @@ const EntryItem = ({ item, symptomName, navigation }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#f0f0f04D',
-    padding: 20,
-    borderRadius: 16,
-    flex: 1,
-    marginVertical: 10,
+    marginHorizontal: 10,
     alignItems: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#f0f0f04D',
+    borderRadius: 15,
+    width: 70,
+    height: 90,
+    justifyContent: 'center',
   },
   plainContainer: {
-    // backgroundColor: '#f0f0f04D',
     padding: 20,
     borderRadius: 16,
     flex: 1,
     marginVertical: 10,
     alignItems: 'center',
-    // flexDirection: 'row',
   },
   emoji: {
     fontSize: 30,
     color: theme.colors.accent,
   },
-  ratingContainer: {
-    marginRight: 25,
-    marginLeft: 5,
-  },
   dateText: {
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 18,
-    // marginBottom: 10,
   },
   textContainer: {
     paddingVertical: 0,
