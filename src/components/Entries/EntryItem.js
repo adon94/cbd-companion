@@ -8,9 +8,9 @@ import RatingButton from '../RatingButton';
 
 const EntryItem = ({ item, symptomName, navigation }) => {
   const rating = Math.round(item.rating);
-  const dateTime = navigation
-    ? dateDisplay(item.date)
-    : timeDisplay(item.timestamp);
+  // const dateTime = navigation
+  //   ? dateDisplay(item.date)
+  //   : timeDisplay(item.timestamp);
 
   const EntryContent = () => (
     <>
@@ -18,7 +18,7 @@ const EntryItem = ({ item, symptomName, navigation }) => {
         <Text style={styles.emoji}>{ratingReps[rating - 1]}</Text>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.dateText}>{dateTime}</Text>
+        <Text style={styles.dateText}>{dateDisplay(item.timestamp)}</Text>
       </View>
     </>
   );
@@ -45,7 +45,7 @@ const EntryItem = ({ item, symptomName, navigation }) => {
     <View style={styles.plainContainer}>
       <RatingButton>{ratingReps[rating - 1]}</RatingButton>
       <View style={styles.textContainer}>
-        <Text style={styles.dateText}>{dateTime}</Text>
+        <Text style={styles.dateText}>{timeDisplay(item.timestamp)}</Text>
       </View>
     </View>
   );
@@ -83,10 +83,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     // marginBottom: 10,
-  },
-  notesText: {
-    color: '#ffffff',
-    fontSize: 16,
   },
   textContainer: {
     paddingVertical: 0,

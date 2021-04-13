@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Dimensions,
-} from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import RatingButton from '../RatingButton';
 
 const windowWidth = Dimensions.get('window').width;
@@ -16,6 +11,12 @@ const isBigPhone = windowHeight > 700;
 const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
   const [rating, setRating] = useState();
 
+  useEffect(() => {
+    if (symptom.rating && !rating) {
+      setRating(symptom.rating);
+    }
+  }, []);
+
   const setActive = (index) => {
     if (index + 1 === rating) {
       setRating(null);
@@ -25,8 +26,6 @@ const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
       setSymptoms(index + 1);
     }
   };
-
-  const boxSize = isLifestyle ? 60 : 40;
 
   return (
     <View style={styles.symptomContainer}>
@@ -63,24 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 40,
     marginTop: 5,
-  },
-  feelBox: {
-    backgroundColor: '#f0f0f04D',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 40,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    paddingHorizontal: 10,
-  },
-  activeBox: {
-    backgroundColor: '#009432',
-  },
-  feelText: {
-    color: '#ffffff',
-    fontSize: windowWidth / 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 

@@ -3,36 +3,26 @@ import { StyleSheet, Text, View, Animated } from 'react-native';
 
 import Layout from '../../../components/Layout';
 import BackButton from '../../../components/BackButton';
-import EntryItem from '../../../components/Entries/EntryItem';
-import Stats from '../../../components/charts/MoodChart';
 
 import { dateDisplay } from '../../../core/utils';
-import { ratingReps } from '../../../core/constants';
-import { getMoodsBySymptomOnDay } from '../../../api/database';
+import { getFactorsOnDay } from '../../../api/database';
 import { theme } from '../../../core/theme';
 import ScrollHeader from '../../../components/ScrollHeader';
 import RatingButton from '../../../components/RatingButton';
+import Header from '../../../components/Header';
 
 const HEADER_MIN_HEIGHT = 80;
 
 const SingleEntry = ({ route: { params: item }, navigation }) => {
-  const average = Math.round(item.rating);
-  const [moods, setMoods] = useState([]);
+  const average = item.rating;
   const [factors, setFactors] = useState([]);
 
   useEffect(() => {
-    async function fetchMoods() {
-      const moodData = await getMoodsBySymptomOnDay(item.symptomName, item.id);
-      setMoods(moodData.moods);
-      const factorList = [];
-      Object.keys(moodData.dayInfo).forEach((key) => {
-        if (key !== 'rating' && key !== 'date') {
-          factorList.push({ displayName: key, value: moodData.dayInfo[key] });
-        }
-      });
-      setFactors(factorList);
+    async function fetchFactors() {
+      const result = await getFactorsOnDay(item.id);
+      setFactors(result);
     }
-    fetchMoods();
+    fetchFactors();
   }, []);
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -43,107 +33,47 @@ const SingleEntry = ({ route: { params: item }, navigation }) => {
       <ScrollHeader
         scrollY={scrollY}
         header={item.symptomName}
-        title={dateDisplay(item.date)}
+        title={dateDisplay(item.timestamp)}
       />
       <View style={styles.container}>
-        {moods && moods.length > 0 && (
-          <>
-            <Animated.FlatList
-              data={moods}
-              ListHeaderComponent={() => (
-                <>
-                  <Text style={styles.emoji}>
-                    Overall: {ratingReps[average - 1]}
-                  </Text>
-                  {moods.length > 1 && <Stats moods={moods} />}
-                  {/* {factors.length > 0 &&
-                    factors.map((factor) => (
-                      <Text style={styles.factorText}>{factor}</Text>
-                    ))} */}
-                  {/* <Text style={styles.emoji}>Your entries:</Text> */}
-                </>
-              )}
-              renderItem={({ item: moodEntry }) => (
-                <EntryItem item={moodEntry} key={item.timestamp} />
-              )}
-              ListFooterComponent={() => (
-                <>
-                  {factors.length > 0 &&
-                    factors.map((factor) => (
-                      <View style={styles.factorItem} key={factor.displayName}>
-                        <Text style={styles.factorText}>
-                          {factor.displayName}
-                        </Text>
-                        <RatingButton isLifestyle>
-                          {factor.value ? 'Yes' : 'No'}
-                        </RatingButton>
-                      </View>
-                    ))}
-                </>
-              )}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.flatList}
-              numColumns={4}
-              onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { y: scrollY } } }], // event.nativeEvent.contentOffset.x to scrollX
-                { useNativeDriver: true }, // use native driver for animation
-              )}
-            />
-          </>
-        )}
+        <Header sm>Rating: {average}</Header>
+        <Header sm style={styles.factorHeader}>
+          Lifestyle Factors:
+        </Header>
+        {factors.length > 0 &&
+          factors.map((factor) => (
+            <View style={styles.factorItem} key={factor.displayName}>
+              <Text style={styles.factorText}>{factor.displayName}</Text>
+              <RatingButton isLifestyle>
+                {factor.rating === 2 ? 'Yes' : 'No'}
+              </RatingButton>
+            </View>
+          ))}
       </View>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  textWrapper: {
-    alignSelf: 'flex-start',
-  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
     paddingBottom: 0,
     marginTop: HEADER_MIN_HEIGHT, // min height of headerContainer
+    paddingTop: 70,
   },
-  flatList: {
-    paddingTop: 70, // distance from headercontainer
+  factorHeader: {
+    marginTop: 15,
   },
   factorItem: {
     alignItems: 'center',
     marginBottom: 20,
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 30,
-    width: '0%',
-  },
-  emoji: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: theme.colors.accent,
   },
   factorText: {
     marginTop: 20,
     fontSize: 22,
     color: theme.colors.accent,
     textAlign: 'center',
-  },
-  heading: {
-    color: '#fff',
-    fontSize: 50,
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  notesText: {
-    color: '#ffffff',
-    fontSize: 16,
-  },
-  textContainer: {
-    paddingVertical: 0,
   },
 });
 

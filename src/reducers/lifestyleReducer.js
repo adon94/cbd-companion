@@ -12,7 +12,6 @@ export const fetchLifestyle = createAsyncThunk(
 export const sendLifestyleEdits = createAsyncThunk(
   'lifestyle/sendLifestyleEdits',
   async ({ toAdd, toRemove }, { dispatch }) => {
-    console.log('sendSymptomEdits', toAdd.length);
     await changeMultipleLifestyles(toAdd, toRemove);
     dispatch(fetchLifestyle());
   },

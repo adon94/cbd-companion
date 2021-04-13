@@ -10,23 +10,23 @@ const OVERALL = 'Overall';
 
 const HomeGraph = ({ moods }) => {
   const [view, setView] = useState(WEEK);
-  let data = [];
+  // let data = [];
 
-  if (view === WEEK) {
-    const monday = getMonday();
-    const thisWeek = [];
-    moods.some((el) => {
-      const notThisWeek = new Date(el.date) < monday;
-      if (!notThisWeek) {
-        data.push(el);
-      }
-      return notThisWeek;
-    });
-  } else {
-    data = [...moods];
-  }
+  // if (view === WEEK) {
+  // const monday = getMonday();
+  //   const thisWeek = [];
+  //   moods.some((el) => {
+  //     const notThisWeek = new Date(el.timestamp) < monday;
+  //     if (!notThisWeek) {
+  //       data.push(el);
+  //     }
+  //     return notThisWeek;
+  //   });
+  // } else {
+  //   data = [...moods];
+  // }
 
-  const showStats = data.length > 0;
+  const showStats = moods.length > 0;
 
   const toggleView = () => {
     if (view === WEEK) {
@@ -44,7 +44,7 @@ const HomeGraph = ({ moods }) => {
         </Text>
       </TouchableOpacity>
       {showStats && (
-        <MoodChart moods={data.reverse()} displayDay={view === WEEK} average />
+        <MoodChart moods={moods} displayDay={view === WEEK} average />
       )}
     </View>
   );

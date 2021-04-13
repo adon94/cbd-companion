@@ -1,10 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getSymptoms, changeMultipleSymptoms } from '../api/database';
+import {
+  getSymptoms,
+  changeMultipleSymptoms,
+  getSymptomsOnDay,
+} from '../api/database';
+import { getTodayString } from '../core/utils';
 import { fetchMoods } from './moodsReducer';
 
 export const fetchSymptoms = createAsyncThunk(
   'symptoms/fetchSymptoms',
   async () => {
+    const dayData = await getSymptomsOnDay(getTodayString(new Date()));
+    if (dayData.length > 0) return dayData;
     const response = await getSymptoms();
     return response;
   },
@@ -22,7 +29,6 @@ export const fetchSymptomsWithMoods = createAsyncThunk(
 export const sendSymptomEdits = createAsyncThunk(
   'symptoms/sendSymptomEdits',
   async ({ toAdd, toRemove }, { dispatch }) => {
-    console.log('sendSymptomEdits', toAdd.length);
     await changeMultipleSymptoms(toAdd, toRemove);
     dispatch(fetchSymptoms());
   },

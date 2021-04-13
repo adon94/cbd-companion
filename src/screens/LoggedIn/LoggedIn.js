@@ -21,7 +21,7 @@ const LoggedIn = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Add"
+      // initialRouteName="Add"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;

@@ -29,8 +29,6 @@ const AddMood = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const moodsStatus = useSelector((state) => state.moods.status);
   const moods = useSelector((state) => state.moods.moods);
-  console.log('lol', moods[0]);
-  // const [symptoms, setSymptoms] = useState([]);
 
   useEffect(() => {
     dispatch(fetchSymptoms());

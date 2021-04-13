@@ -8,7 +8,7 @@ const usersRef = firestore().collection('Users');
 async function addMood(symptoms, lifestyleFactors) {
   const date = new Date();
 
-  // date.setDate(date.getDate() - 3);
+  // date.setDate(date.getDate() - 1);
   // const timestamp = firestore.FieldValue.serverTimestamp();
   const timestamp = date.toISOString();
   const today = getTodayString(date);
@@ -81,15 +81,16 @@ async function getMoodsBySymptom(symptomName) {
     .collection('symptoms')
     .doc(symptomName)
     .collection('days')
-    .orderBy('date', 'desc')
+    .orderBy('timestamp', 'desc')
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.size > 0) {
         querySnapshot.forEach((documentSnapshot) => {
-          moods.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+          const el = documentSnapshot.data();
+          moods.push({ ...el, id: documentSnapshot.id });
         });
       }
-      return moods;
+      return moods.reverse();
     });
 }
 
@@ -102,20 +103,64 @@ async function getWeeklyMoods(symptomName) {
     .collection('symptoms')
     .doc(symptomName)
     .collection('days')
-    .orderBy('date', 'desc')
+    .orderBy('timestamp', 'desc')
     .limit(7)
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.size > 0) {
         querySnapshot.forEach((documentSnapshot) => {
-          const docData = documentSnapshot.data();
-          const isThisWeek = new Date(docData.date) >= monday;
-          if (isThisWeek) {
-            moods.push({ ...documentSnapshot.data(), id: documentSnapshot.id });
+          const el = documentSnapshot.data();
+          const notThisWeek = new Date(el.timestamp) < monday;
+          if (!notThisWeek) {
+            moods.push({ ...el, id: documentSnapshot.id });
           }
         });
       }
-      return moods;
+      return moods.reverse();
+    });
+}
+
+async function getFactorsOnDay(date) {
+  const lifestyleFactors = [];
+  const user = auth().currentUser;
+
+  const dayRef = usersRef.doc(user.uid).collection('days').doc(date);
+
+  return await dayRef
+    .collection('lifestyleFactors')
+    .get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach((documentSnapshot) => {
+          lifestyleFactors.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+      }
+      return lifestyleFactors;
+    });
+}
+
+async function getSymptomsOnDay(date) {
+  const symptoms = [];
+  const user = auth().currentUser;
+
+  const dayRef = usersRef.doc(user.uid).collection('days').doc(date);
+
+  return await dayRef
+    .collection('symptoms')
+    .get()
+    .then((querySnapshot) => {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach((documentSnapshot) => {
+          symptoms.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+      }
+      return symptoms;
     });
 }
 
@@ -297,4 +342,6 @@ export {
   addLifestyle,
   changeMultipleLifestyles,
   getWeeklyMoods,
+  getFactorsOnDay,
+  getSymptomsOnDay,
 };

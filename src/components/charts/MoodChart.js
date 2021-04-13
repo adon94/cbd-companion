@@ -38,11 +38,11 @@ const MoodChart = ({ moods, average, displayDay }) => {
   //   : moods.map((mood) => timeDisplay(mood.timestamp)); // also this
   let xAxisData;
   if (average && displayDay) {
-    xAxisData = moods.map((mood) => getDayName(mood.date));
+    xAxisData = moods.map((mood) => ({ day: getDayName(mood.timestamp) }));
   } else if (average) {
-    xAxisData = moods.map((mood) => numericDate(mood.date));
+    xAxisData = moods.map((mood) => ({ day: numericDate(mood.timestamp) }));
   } else {
-    xAxisData = moods.map((mood) => timeDisplay(mood.timestamp));
+    xAxisData = moods.map((mood) => ({ day: timeDisplay(mood.timestamp) }));
   }
 
   const scrollView = useRef(null);
@@ -95,7 +95,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
                   paddingTop: 10,
                 }}
                 data={xAxisData}
-                formatLabel={(index) => xAxisData[index]}
+                formatLabel={(index) => xAxisData[index].day}
                 contentInset={{ left: 25, right: 25 }}
                 svg={{ fontSize: 10, fill: '#fff' }}
               />

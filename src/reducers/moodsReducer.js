@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getMoodsBySymptom, addMood as postMood } from '../api/database';
+import { addMood as postMood, getWeeklyMoods } from '../api/database';
 
 export const fetchMoods = createAsyncThunk(
   'moods/fetchMoods',
   async (symptomName) => {
-    const response = await getMoodsBySymptom(symptomName);
+    const response = await getWeeklyMoods(symptomName);
     return response;
   },
 );
