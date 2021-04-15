@@ -17,7 +17,7 @@ import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 import Layout from '../../../components/Layout';
 
 import EntryItem from '../../../components/Entries/EntryItem';
-import SelectSymptom from '../../../components/Entries/SelectButton';
+import SelectSymptomButton from '../../../components/Entries/SelectButton';
 import HomeGraph from '../../../components/Entries/HomeGraph';
 import LoadingScreen from '../../LoadingScreen';
 import LinearGradient from 'react-native-linear-gradient';
@@ -33,7 +33,7 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 const Entries = ({ navigation }) => {
   const viewingSymptom = useSelector((state) => state.viewingSymptom);
   const symptoms = useSelector((state) => state.symptoms.symptoms);
-  const moods = useSelector((state) => state.moods.moods);
+  const moods = useSelector((state) => state.moods.weekMoods);
 
   const symptomsStatus = useSelector((state) => state.symptoms.status);
   const moodsStatus = useSelector((state) => state.moods.status);
@@ -102,7 +102,7 @@ const Entries = ({ navigation }) => {
             },
           ]}>
           {symptoms[viewingSymptom] && (
-            <SelectSymptom
+            <SelectSymptomButton
               onPress={() => navigation.navigate('SelectSymptom')}
               onLayout={(e) => {
                 if (titleWidth === 0) {
@@ -110,7 +110,7 @@ const Entries = ({ navigation }) => {
                 }
               }}>
               {symptoms[viewingSymptom].displayName}
-            </SelectSymptom>
+            </SelectSymptomButton>
           )}
         </Animated.View>
       </Animated.View>

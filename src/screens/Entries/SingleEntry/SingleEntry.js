@@ -26,7 +26,6 @@ const SingleEntry = ({ route: { params: item }, navigation }) => {
   }, []);
 
   const scrollY = useRef(new Animated.Value(0)).current;
-
   return (
     <Layout>
       <BackButton onPress={() => navigation.goBack()} />
@@ -35,32 +34,49 @@ const SingleEntry = ({ route: { params: item }, navigation }) => {
         header={item.symptomName}
         title={dateDisplay(item.timestamp)}
       />
-      <View style={styles.container}>
-        <Header sm>Rating: {average}</Header>
+      <Animated.ScrollView
+        style={styles.container}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }], // event.nativeEvent.contentOffset.x to scrollX
+          { useNativeDriver: true }, // use native driver for animation
+        )}>
+        <View style={styles.badge}>
+          <Text style={styles.regularText}>Rating: {average}</Text>
+        </View>
+        <Header sm>Dosage:</Header>
+        <View style={styles.badge}>
+          <Text style={styles.regularText}>{item.amount}ml</Text>
+          <Text style={styles.regularText}>{item.product}</Text>
+          <Text style={styles.regularText}>{item.brand}</Text>
+        </View>
         <Header sm style={styles.factorHeader}>
           Lifestyle Factors:
         </Header>
-        {factors.length > 0 &&
-          factors.map((factor) => (
-            <View style={styles.factorItem} key={factor.displayName}>
-              <Text style={styles.factorText}>{factor.displayName}</Text>
-              <RatingButton isLifestyle>
-                {factor.rating === 2 ? 'Yes' : 'No'}
-              </RatingButton>
-            </View>
-          ))}
-      </View>
+        <View style={styles.factorsContainer}>
+          {factors.length > 0 &&
+            factors.map((factor) => (
+              <View style={styles.factorItem} key={factor.displayName}>
+                <Text style={styles.factorText}>{factor.displayName}</Text>
+                <RatingButton isLifestyle>
+                  {factor.rating === 2 ? 'Yes' : 'No'}
+                </RatingButton>
+              </View>
+            ))}
+        </View>
+      </Animated.ScrollView>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingHorizontal: 20,
     paddingBottom: 0,
     marginTop: HEADER_MIN_HEIGHT, // min height of headerContainer
-    paddingTop: 70,
+    paddingTop: 40,
+  },
+  factorsContainer: {
+    paddingBottom: 40,
   },
   factorHeader: {
     marginTop: 15,
@@ -68,6 +84,19 @@ const styles = StyleSheet.create({
   factorItem: {
     alignItems: 'center',
     marginBottom: 20,
+  },
+  regularText: {
+    fontSize: 22,
+    color: theme.colors.accent,
+  },
+  badge: {
+    backgroundColor: '#f0f0f04D',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginBottom: 15,
+    marginTop: 15,
   },
   factorText: {
     marginTop: 20,

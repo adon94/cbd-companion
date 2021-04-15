@@ -9,39 +9,44 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-// import { store } from '../../core/store';
 import { timeDisplay } from '../../../core/utils';
 import { sendMoods } from '../../../reducers/moodsReducer';
 import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
 import Layout from '../../../components/Layout';
-// import { ADD_DOSAGE } from '../../core/store';
 import Button from '../../../components/Button';
 import BackButton from '../../../components/BackButton';
-import CheckboxInput from '../../../components/CheckboxInput';
+
+// myproducts:
+// users/me/products/'leafly tincture',etc
+
+// daily doses:
+// users/me/days/2021-04-13/product, amount, time
+// users/me/symptoms/anxiety/days/2021-04-13/product, brand, amount, time
 
 const AddDosage = ({ navigation }) => {
   // const globalState = useContext(store);
   const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
   const symptoms = useSelector((state) => state.symptoms.symptoms);
   const [show, setShow] = useState(false);
-  const [checked, setChecked] = useState(true);
   const [dosage, setDosage] = useState({
-    timestamp: new Date().toISOString(),
-    amount: 16,
+    dosedAt: new Date().toISOString(),
+    amount: 0.75,
+    product: 'Full-Spectrum Tincture',
+    brand: 'Leafly',
   });
   const dispatch = useDispatch();
 
   const onChange = (event, selectedDate) => {
-    const timestamp = selectedDate.toISOString() || dosage.timestamp;
+    const dosedAt = selectedDate.toISOString() || dosage.dosedAt;
     setShow(Platform.OS === 'ios');
-    setDosage({ ...dosage, timestamp });
+    setDosage({ ...dosage, dosedAt });
   };
 
   const submit = async () => {
     try {
       const resultAction = await dispatch(
-        sendMoods({ symptoms, lifestyleFactors }),
+        sendMoods({ symptoms, lifestyleFactors, dosage }),
       );
       if (resultAction.meta.requestStatus === 'fulfilled') {
         dispatch(fetchSymptomsWithMoods());
@@ -59,13 +64,18 @@ const AddDosage = ({ navigation }) => {
         <Text style={styles.questionText}>Confirm dosage</Text>
         <View>
           <TouchableOpacity style={styles.softButton} onPress={() => submit()}>
-            <Text style={styles.buttonText}>{dosage.amount}mg</Text>
+            <Text style={styles.buttonText}>{dosage.amount}ml</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.softButton}
+            onPress={() => setShow(!show)}>
+            <Text style={styles.buttonText}>Leafly Full Spectrum Tincture</Text>
           </TouchableOpacity>
           <Text style={styles.buttonText}>at</Text>
           {show && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={new Date(dosage.timestamp)}
+              value={new Date(dosage.dosedAt)}
               mode="time"
               textColor="#ffffff"
               is24Hour={true}
@@ -77,7 +87,7 @@ const AddDosage = ({ navigation }) => {
             style={styles.softButton}
             onPress={() => setShow(!show)}>
             <Text style={styles.buttonText}>
-              {show ? 'Done' : timeDisplay(dosage.timestamp)}
+              {show ? 'Done' : timeDisplay(dosage.dosedAt)}
             </Text>
           </TouchableOpacity>
         </View>

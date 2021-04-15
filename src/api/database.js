@@ -5,10 +5,10 @@ import { getMonday, getTodayString } from '../core/utils';
 
 const usersRef = firestore().collection('Users');
 
-async function addMood(symptoms, lifestyleFactors) {
+async function addMood(symptoms, lifestyleFactors, doseInfo) {
   const date = new Date();
 
-  // date.setDate(date.getDate() - 1);
+  // date.setDate(date.getDate() - 3);
   // const timestamp = firestore.FieldValue.serverTimestamp();
   const timestamp = date.toISOString();
   const today = getTodayString(date);
@@ -29,6 +29,7 @@ async function addMood(symptoms, lifestyleFactors) {
 
     batch.set(ref, {
       ...symptom,
+      ...doseInfo,
       timestamp,
     });
 
@@ -38,6 +39,7 @@ async function addMood(symptoms, lifestyleFactors) {
 
     batch.set(daySymptomsRef, {
       ...symptom,
+      ...doseInfo,
       timestamp,
     });
   });

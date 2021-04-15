@@ -14,6 +14,7 @@ import { setViewingSymptom } from '../../../reducers/viewingSymptomReducer';
 
 import Layout from '../../../components/Layout';
 import Button from '../../../components/Button';
+import { fetchAllMoods, fetchWeekMoods } from '../../../reducers/moodsReducer';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -25,20 +26,26 @@ const SymptomItem = ({ symptom, onPress }) => (
   </TouchableOpacity>
 );
 
-const SelectSymptom = ({ navigation }) => {
+const SelectSymptom = ({ navigation, route: { params } }) => {
+  const { all } = params || false;
   const symptoms = useSelector((state) => state.symptoms.symptoms);
   const dispatch = useDispatch();
 
   const submit = (index) => {
     dispatch(setViewingSymptom(index));
-    navigation.goBack();
+    const symptomName = symptoms[index].displayName;
+    dispatch(all ? fetchAllMoods(symptomName) : fetchWeekMoods(symptomName));
+    if (all) {
+      navigation.navigate('Stats');
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
     <Layout>
       <SafeAreaView style={styles.container}>
         <FlatList
-          // ListFooterComponent={() => <HomeGraph moods={moods} />}
           data={symptoms}
           renderItem={({ item, index }) => (
             <SymptomItem symptom={item} onPress={() => submit(index)} />
@@ -47,7 +54,11 @@ const SelectSymptom = ({ navigation }) => {
           contentContainerStyle={styles.flatList}
         />
         <View style={styles.containerWithPadding}>
-          <Button mode="outlined" onPress={() => navigation.goBack()}>
+          <Button
+            mode="outlined"
+            onPress={() =>
+              all ? navigation.navigate('Stats') : navigation.goBack()
+            }>
             Cancel
           </Button>
         </View>

@@ -1,36 +1,42 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import CustomBarChart from '../../components/charts/BarChart';
-import { getDayName } from '../../core/utils';
 
 const baseData = { average: 0, dataQuantity: 0, totalValue: 0 };
 
-const data = [
-  { ...baseData }, // mon
-  { ...baseData },
-  { ...baseData },
-  { ...baseData },
-  { ...baseData },
-  { ...baseData },
-  { ...baseData }, // sun
-];
+const DaysOfWeek = ({ moods }) => {
+  const [xAxisData, setXAxisData] = useState([]);
+  const [data, setData] = useState([]);
 
-const DaysOfWeek = () => {
-  const viewingSymptom = useSelector((state) => state.viewingSymptom);
-  const symptoms = useSelector((state) => state.symptoms.symptoms);
-  const moods = useSelector((state) => state.moods.moods);
-  moods.forEach((mood) => {
-    const dayOfWeek = new Date(mood.date).getDay();
-    const index = dayOfWeek - 1;
-    const datapoint = data[index];
+  useEffect(() => {
+    const d = [
+      { ...baseData }, // mon
+      { ...baseData },
+      { ...baseData },
+      { ...baseData },
+      { ...baseData },
+      { ...baseData },
+      { ...baseData }, // sun
+    ];
+    setData(d);
+    moods.forEach((mood) => {
+      const dayOfWeek = new Date(mood.timestamp).getDay();
+      const index = dayOfWeek - 1;
+      const datapoint = d[index];
 
-    datapoint.totalValue += mood.rating;
-    datapoint.dataQuantity += 1;
-    datapoint.average = datapoint.totalValue / datapoint.dataQuantity;
-  });
-
-  const xAxisData = ['Mon', 'Tues', 'Wed', 'Thurs', 'Friday', 'Sat', 'Sun'];
+      datapoint.totalValue += mood.rating;
+      datapoint.dataQuantity += 1;
+      datapoint.average = datapoint.totalValue / datapoint.dataQuantity;
+    });
+    const days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+    setData(d);
+    setXAxisData(
+      days.map((day, i) => ({
+        day,
+        amount: `(${d[i].dataQuantity})`,
+      })),
+    );
+  }, [moods]);
 
   return (
     <View>

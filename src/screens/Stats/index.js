@@ -1,15 +1,35 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchAllMoods } from '../../reducers/moodsReducer';
 
 import Layout from '../../components/Layout';
+import Header from '../../components/Header';
+import SelectSymptomButton from '../../components/Entries/SelectButton';
 import DaysOfWeek from './DaysOfWeek';
 
-const Stats = () => {
+const Stats = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const viewingSymptom = useSelector((state) => state.viewingSymptom);
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const moods = useSelector((state) => state.moods.moods);
+
+  useEffect(() => {
+    dispatch(fetchAllMoods(symptoms[viewingSymptom].displayName));
+  }, []);
   return (
     <Layout>
       <View style={styles.container}>
-        <Text style={styles.title}>Stats coming soon</Text>
-        <DaysOfWeek />
+        <Header style={styles.header}>Advanced Stats</Header>
+        {symptoms[viewingSymptom] && (
+          <SelectSymptomButton
+            onPress={() => navigation.navigate('SelectSymptom', { all: true })}>
+            {symptoms[viewingSymptom].displayName}
+          </SelectSymptomButton>
+        )}
+        <View style={styles.chartsContainers}>
+          <DaysOfWeek moods={moods} />
+        </View>
       </View>
     </Layout>
   );
@@ -22,11 +42,11 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     marginTop: 50,
   },
-  title: {
-    color: '#fff',
-    fontSize: 40,
-    fontWeight: 'bold',
+  header: {
     marginBottom: 20,
+  },
+  chartsContainers: {
+    marginTop: 20,
   },
 });
 

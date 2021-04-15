@@ -5,7 +5,7 @@ import {
   getSymptomsOnDay,
 } from '../api/database';
 import { getTodayString } from '../core/utils';
-import { fetchMoods } from './moodsReducer';
+import { fetchWeekMoods } from './moodsReducer';
 
 export const fetchSymptoms = createAsyncThunk(
   'symptoms/fetchSymptoms',
@@ -21,7 +21,7 @@ export const fetchSymptomsWithMoods = createAsyncThunk(
   'symptoms/fetchSymptomsWithMoods',
   async (arg, { dispatch }) => {
     const response = await getSymptoms();
-    dispatch(fetchMoods(response[0].displayName));
+    dispatch(fetchWeekMoods(response[0].displayName));
     return response;
   },
 );

@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
-import { AreaChart, Grid, YAxis, XAxis } from 'react-native-svg-charts';
+import { StyleSheet, View, ScrollView, Dimensions, Text } from 'react-native';
+import { AreaChart, Grid, YAxis } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { Circle, Path } from 'react-native-svg';
+import XAxis from './XAxis';
 import { getDayName, timeDisplay, numericDate } from '../../core/utils';
 import { theme } from '../../core/theme';
 import { ratingReps } from '../../core/constants';
@@ -38,7 +39,10 @@ const MoodChart = ({ moods, average, displayDay }) => {
   //   : moods.map((mood) => timeDisplay(mood.timestamp)); // also this
   let xAxisData;
   if (average && displayDay) {
-    xAxisData = moods.map((mood) => ({ day: getDayName(mood.timestamp) }));
+    xAxisData = moods.map(({ timestamp, amount }) => ({
+      day: getDayName(timestamp),
+      amount: `${amount}ml`,
+    }));
   } else if (average) {
     xAxisData = moods.map((mood) => ({ day: numericDate(mood.timestamp) }));
   } else {
@@ -88,17 +92,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
                 <Line />
                 <Decorator />
               </AreaChart>
-              <XAxis
-                style={{
-                  marginHorizontal: -10,
-                  height: xAxisHeight,
-                  paddingTop: 10,
-                }}
-                data={xAxisData}
-                formatLabel={(index) => xAxisData[index].day}
-                contentInset={{ left: 25, right: 25 }}
-                svg={{ fontSize: 10, fill: '#fff' }}
-              />
+              <XAxis data={xAxisData} labels={['day', 'amount']} />
             </View>
           </ScrollView>
         </View>
@@ -111,7 +105,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 0,
-    // marginVertical: 20,
   },
   chartContainer: {
     flex: 1,
