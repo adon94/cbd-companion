@@ -15,7 +15,7 @@ const Decorator = ({ x, y, data }) => {
     <Circle
       key={index}
       cx={x(index)}
-      cy={y(value)}
+      cy={y(value)} // this
       r={4}
       stroke={theme.colors.primary}
       fill={'white'}
@@ -39,9 +39,9 @@ const MoodChart = ({ moods, average, displayDay }) => {
   //   : moods.map((mood) => timeDisplay(mood.timestamp)); // also this
   let xAxisData;
   if (average && displayDay) {
-    xAxisData = moods.map(({ timestamp, amount }) => ({
+    xAxisData = moods.map(({ timestamp, doseAmount }) => ({
       day: getDayName(timestamp),
-      amount: `${amount}ml`,
+      doseAmount: `${doseAmount || 0}`,
     }));
   } else if (average) {
     xAxisData = moods.map((mood) => ({ day: numericDate(mood.timestamp) }));
@@ -92,7 +92,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
                 <Line />
                 <Decorator />
               </AreaChart>
-              <XAxis data={xAxisData} labels={['day', 'amount']} />
+              <XAxis data={xAxisData} labels={['day', 'doseAmount']} />
             </View>
           </ScrollView>
         </View>
@@ -103,8 +103,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingBottom: 0,
+    paddingBottom: 20,
   },
   chartContainer: {
     flex: 1,

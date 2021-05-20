@@ -68,7 +68,7 @@ const AddMood = ({ route, navigation }) => {
 
   return (
     <Layout>
-      {beforeDose && <BackButton onPress={() => navigation.goBack()} />}
+      <BackButton onPress={() => navigation.goBack()} />
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
           {/* <TouchableOpacity
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingBottom: 0,
+    paddingTop: 20,
     marginTop: isBigPhone ? windowHeight / 20 : 30,
     marginBottom: 20,
   },

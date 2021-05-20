@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 
 import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 import {
@@ -16,6 +17,7 @@ import AddItemFooter from '../../../components/AddMoodScreen/AddItemFooter';
 import Header from '../../../components/Header';
 
 import LoadingScreen from '../../LoadingScreen';
+import { isToday } from '../../../core/utils';
 
 const feels = ['No', 'Yes'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
@@ -26,6 +28,7 @@ const isBigPhone = windowHeight > 700;
 const AddLifestyle = ({ navigation }) => {
   const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
   const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const lastDose = useSelector((state) => state.dose.last);
   const dispatch = useDispatch();
   const moodsStatus = useSelector((state) => state.moods.status);
 
@@ -35,18 +38,29 @@ const AddLifestyle = ({ navigation }) => {
 
   const submit = async () => {
     // navigation.navigate('');
-    navigation.navigate('AddDosage');
-    // try {
-    //   const resultAction = await dispatch(
-    //     sendMoods({ symptoms, lifestyleFactors }),
-    //   );
-    //   if (resultAction.meta.requestStatus === 'fulfilled') {
-    //     dispatch(fetchSymptomsWithMoods());
-    //     navigation.navigate('Entries');
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    // navigation.navigate('AddDosage');
+    // if (lastDose.lastDosedAt && isToday(lastDose.lastDosedAt)) {
+    let { onboarded, ...doseInfo } = lastDose;
+    console.log('doseInfo', doseInfo);
+    if (!doseInfo.lastDosedAt || !isToday(new Date(doseInfo.lastDosedAt))) {
+      doseInfo = null;
+    }
+    try {
+      const resultAction = await dispatch(
+        sendMoods({ symptoms, lifestyleFactors, doseInfo }),
+      );
+      if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchSymptomsWithMoods());
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Entries' }],
+          }),
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const updateIndexAt = (rating, index) => {
@@ -110,7 +124,7 @@ const AddLifestyle = ({ navigation }) => {
         )}
         <View style={[styles.containerWithPadding, styles.buttonContainer]}>
           <Button onPress={() => navigation.goBack()}>Back</Button>
-          <Button onPress={submit}>Next</Button>
+          <Button onPress={submit}>Done</Button>
         </View>
       </View>
     </Layout>

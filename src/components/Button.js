@@ -4,26 +4,36 @@ import { theme } from '../core/theme';
 
 const windowWidth = Dimensions.get('window').width;
 
-const Button = ({ mode, style, fullWidth, children, ...props }) => (
+const Button = ({
+  outlined,
+  style,
+  fullWidth,
+  children,
+  capitalize,
+  cancel,
+  ...props
+}) => (
   <TouchableOpacity
     style={[
       styles.button,
-      mode === 'outlined'
-        ? { backgroundColor: theme.colors.surface }
-        : { backgroundColor: theme.colors.backdrop },
+      outlined && { backgroundColor: theme.colors.semiTransparent },
+      //   : { backgroundColor: theme.colors.backdrop },
       fullWidth && styles.fullWidth,
       style,
     ]}
     labelStyle={[
       styles.text,
-      mode === 'outlined' && { color: theme.colors.backdrop },
+      // mode === 'outlined' && { color: theme.colors.backdrop },
     ]}
-    mode={mode}
+    // mode={mode}
     {...props}>
     <Text
       style={[
         styles.text,
-        mode === 'outlined' && { color: theme.colors.backdrop },
+        capitalize && { textTransform: 'none' },
+        outlined && { color: '#fff' },
+        cancel && { color: theme.colors.error },
+        // mode === 'outlined' && { color: theme.colors.backdrop },
       ]}>
       {children}
     </Text>
@@ -37,11 +47,13 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10,
     padding: 15,
-    paddingHorizontal: 20,
-    borderRadius: 30,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
   },
   text: {
-    color: '#ffffff',
+    color: theme.colors.primary,
     fontSize: windowWidth / 20,
     fontWeight: 'bold',
     textAlign: 'center',

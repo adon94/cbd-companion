@@ -6,6 +6,7 @@ import viewingSymptom from './viewingSymptomReducer';
 import user from './userReducer';
 import moods from './moodsReducer';
 import loaded from './loadedReducer';
+import dose from './doseReducer';
 
 export default configureStore({
   reducer: {
@@ -15,5 +16,6 @@ export default configureStore({
     user,
     moods,
     loaded,
+    dose,
   },
 });

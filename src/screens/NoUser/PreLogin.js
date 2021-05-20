@@ -11,9 +11,9 @@ const screenHeight = Dimensions.get('window').height;
 const PreLogin = ({ navigation }) => (
   <Layout style={styles.layoutContainer} container centered>
     {/* <Logo /> */}
-    <Header centered>Buddy</Header>
+    <Header centered>CBD Journey</Header>
 
-    <Paragraph>The essential CDB companion</Paragraph>
+    <Paragraph>The CBD Journalling App</Paragraph>
     <Button mode="contained" onPress={() => navigation.navigate('Login')}>
       Login
     </Button>

@@ -9,8 +9,8 @@ const XAxis = ({ data, labels, bar }) => {
           key={x.day}
           style={[
             styles.xTextContainer,
-            !bar && i === 0 && styles.first,
             !bar && i === data.length - 1 && styles.last,
+            !bar && i === 0 && styles.first,
           ]}>
           <Text style={styles.xText}>{x[labels[0]]}</Text>
           {labels[1] && <Text style={styles.xText}>{x[labels[1]]}</Text>}

@@ -39,7 +39,7 @@ const LoggedIn = () => {
       tabBarOptions={{
         activeTintColor: '#56ab2f',
         activeBackgroundColor: '#a8e063',
-        inactiveTintColor: '#fffa',
+        inactiveTintColor: '#fff',
         inactiveBackgroundColor: '#a8e063',
         showLabel: false,
         style: { borderTopWidth: 0, backgroundColor: '#a8e063' },

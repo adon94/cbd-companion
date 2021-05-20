@@ -10,7 +10,7 @@ const CustomBarChart = ({ data, xAxisData }) => {
   const contentInset = { top: 20, bottom: 20 };
 
   return (
-    <View style={{ height: 200, flexDirection: 'row' }}>
+    <View style={{ marginBottom: 25, flexDirection: 'row' }}>
       <YAxis
         data={[1, 2, 3, 4, 5]}
         contentInset={contentInset}
@@ -33,7 +33,7 @@ const CustomBarChart = ({ data, xAxisData }) => {
           <Grid />
         </BarChart>
 
-        <XAxis data={xAxisData} labels={['day', 'amount']} bar />
+        <XAxis data={xAxisData} labels={['day', 'doseAmount']} bar />
       </View>
     </View>
   );

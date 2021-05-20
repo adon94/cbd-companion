@@ -12,10 +12,17 @@ const CbdDetails = ({ cbdDetails, setCbdDetails }) => {
       <TextInput
         placeholder="Brand name"
         returnKeyType="next"
-        value={cbdDetails.brandName}
-        onChangeText={(text) =>
-          setCbdDetails({ ...cbdDetails, brandName: text })
-        }
+        value={cbdDetails.brand}
+        onChangeText={(text) => setCbdDetails({ ...cbdDetails, brand: text })}
+        autoCapitalize="words"
+        autoCompleteType="off"
+        disabled={unavailable}
+      />
+      <TextInput
+        placeholder="Product type"
+        returnKeyType="next"
+        value={cbdDetails.product}
+        onChangeText={(text) => setCbdDetails({ ...cbdDetails, product: text })}
         autoCapitalize="words"
         autoCompleteType="off"
         disabled={unavailable}

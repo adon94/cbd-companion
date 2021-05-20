@@ -7,6 +7,7 @@ import Layout from '../../components/Layout';
 import Header from '../../components/Header';
 import SelectSymptomButton from '../../components/Entries/SelectButton';
 import DaysOfWeek from './DaysOfWeek';
+import LifestyleCorrelation from './LifestyleCorrelation';
 
 const Stats = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const Stats = ({ navigation }) => {
         )}
         <View style={styles.chartsContainers}>
           <DaysOfWeek moods={moods} />
+          <LifestyleCorrelation />
         </View>
       </View>
     </Layout>

@@ -1,56 +1,60 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Platform,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
-import { timeDisplay } from '../../../core/utils';
-import { sendMoods } from '../../../reducers/moodsReducer';
-import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { CommonActions } from '@react-navigation/native';
 
 import Layout from '../../../components/Layout';
 import Button from '../../../components/Button';
 import BackButton from '../../../components/BackButton';
+import MyPicker from './MyPicker';
 
-// myproducts:
-// users/me/products/'leafly tincture',etc
+import { theme } from '../../../core/theme';
+import { timeDisplay } from '../../../core/utils';
+import {
+  fetchDoseInfo,
+  sendDose,
+  setDoseInfo,
+} from '../../../reducers/doseReducer';
+import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
-// daily doses:
-// users/me/days/2021-04-13/product, amount, time
-// users/me/symptoms/anxiety/days/2021-04-13/product, brand, amount, time
+const drops = ['1 drop', '2 drops', '3 drops', '4 drops', '5 drops', '6 drops'];
+const windowWidth = Dimensions.get('window').width;
 
 const AddDosage = ({ navigation }) => {
-  // const globalState = useContext(store);
-  const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
-  const symptoms = useSelector((state) => state.symptoms.symptoms);
-  const [show, setShow] = useState(false);
-  const [dosage, setDosage] = useState({
-    dosedAt: new Date().toISOString(),
-    amount: 0.75,
-    product: 'Full-Spectrum Tincture',
-    brand: 'Leafly',
-  });
   const dispatch = useDispatch();
+  const dose = useSelector((state) => state.dose.doseInfo);
+  const [show, setShow] = useState(false);
+  const [showDt, setShowDt] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const dosedAt = selectedDate.toISOString() || dosage.dosedAt;
-    setShow(Platform.OS === 'ios');
-    setDosage({ ...dosage, dosedAt });
+  const setDose = (doseInfo) => {
+    dispatch(setDoseInfo(doseInfo));
   };
+
+  const onTimeChange = (selectedTime) => {
+    const date = new Date(selectedTime);
+    const dosedAt = date.toISOString();
+    dispatch(setDoseInfo({ ...dose, dosedAt }));
+    setShowDt(false);
+  };
+
+  useEffect(() => {
+    dispatch(fetchDoseInfo());
+  }, [dispatch]);
 
   const submit = async () => {
     try {
-      const resultAction = await dispatch(
-        sendMoods({ symptoms, lifestyleFactors, dosage }),
-      );
+      const resultAction = await dispatch(sendDose(dose));
       if (resultAction.meta.requestStatus === 'fulfilled') {
         dispatch(fetchSymptomsWithMoods());
-        navigation.navigate('Entries');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Entries' }],
+          }),
+        );
+      } else {
+        console.log(resultAction.error);
       }
     } catch (err) {
       console.log(err);
@@ -61,40 +65,55 @@ const AddDosage = ({ navigation }) => {
     <Layout>
       <BackButton onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <Text style={styles.questionText}>Confirm dosage</Text>
+        <Text style={styles.questionText}>Confirm dose</Text>
         <View>
-          <TouchableOpacity style={styles.softButton} onPress={() => submit()}>
-            <Text style={styles.buttonText}>{dosage.amount}ml</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.softButton}
-            onPress={() => setShow(!show)}>
-            <Text style={styles.buttonText}>Leafly Full Spectrum Tincture</Text>
-          </TouchableOpacity>
-          <Text style={styles.buttonText}>at</Text>
-          {show && (
+          <Button
+            capitalize
+            style={styles.topButton}
+            onPress={() => setShow(!show)}
+            outlined>
+            {dose.doseAmount || '1 drop'}
+          </Button>
+          <Button
+            capitalize={dose.brand != null}
+            outlined
+            onPress={() => navigation.navigate('AddProduct')}>
+            {dose.brand ? `${dose.brand} ${dose.product}` : 'Select a product'}
+          </Button>
+          <Text style={styles.regText}>at</Text>
+          {/* <View style={{ alignItems: 'center', width: 300 }}>
             <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date(dosage.dosedAt)}
-              mode="time"
-              textColor="#ffffff"
+              style={styles.button}
+              // testID="dateTimePicker"
+              value={time}
+              mode={'time'}
               is24Hour={true}
-              display="default"
-              onChange={onChange}
+              display="compact"
+              onChange={onTimeChange}
             />
-          )}
-          <TouchableOpacity
-            style={styles.softButton}
-            onPress={() => setShow(!show)}>
-            <Text style={styles.buttonText}>
-              {show ? 'Done' : timeDisplay(dosage.dosedAt)}
-            </Text>
-          </TouchableOpacity>
+          </View> */}
+          <Button outlined capitalize onPress={() => setShowDt(!show)}>
+            Today, {timeDisplay(dose.dosedAt || new Date().toISOString())}
+          </Button>
         </View>
-        <Button onPress={() => submit()}>
-          <Text style={styles.buttonText}>Done</Text>
+        <Button fullWidth onPress={() => submit()}>
+          Done
         </Button>
       </View>
+      <MyPicker
+        values={drops}
+        setValue={(v) => setDose({ ...dose, doseAmount: v })}
+        show={show}
+        hide={() => setShow(false)}
+        selectedValue={dose.doseAmount || '1 drop'}
+      />
+      <DateTimePickerModal
+        date={dose.dosedAt ? new Date(dose.dosedAt) : new Date()}
+        isVisible={showDt}
+        mode="datetime"
+        onConfirm={onTimeChange}
+        onCancel={() => setShowDt(false)}
+      />
     </Layout>
   );
 };
@@ -103,6 +122,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
     paddingBottom: 0,
     marginTop: 85,
@@ -114,16 +134,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   softButton: {
-    backgroundColor: '#f0f0f04D',
+    borderColor: '#fff',
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 20,
   },
-  buttonText: {
+  topButton: {
+    marginBottom: 20,
+  },
+  regText: {
     color: '#ffffff',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    padding: 25,
+    marginVertical: 25,
+  },
+  button: {
+    marginVertical: 10,
+    padding: 15,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+    fontSize: windowWidth / 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
 });
 

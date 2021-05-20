@@ -10,23 +10,23 @@ import {
   Text,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { signOut } from '../../../api/auth';
 import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
 import Layout from '../../../components/Layout';
-
+import DoseInfo from '../../../components/DoseInfo';
 import EntryItem from '../../../components/Entries/EntryItem';
 import SelectSymptomButton from '../../../components/Entries/SelectButton';
 import HomeGraph from '../../../components/Entries/HomeGraph';
 import LoadingScreen from '../../LoadingScreen';
-import LinearGradient from 'react-native-linear-gradient';
 
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const HEADER_MAX_HEIGHT = 210;
+const HEADER_MAX_HEIGHT = 290;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
@@ -92,9 +92,10 @@ const Entries = ({ navigation }) => {
             setHeadingHeight(e.nativeEvent.layout.height);
           }
         }}>
-        <Animated.Text style={[styles.title, { opacity: headerOpacity }]}>
-          My CBD Journal
-        </Animated.Text>
+        <Animated.View style={{ opacity: headerOpacity }}>
+          <Text style={[styles.title]}>My CBD Journal</Text>
+          <DoseInfo />
+        </Animated.View>
         <Animated.View
           style={[
             {
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
     paddingTop: HEADER_MAX_HEIGHT + 25,
     paddingHorizontal: 20,
     alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   logout: {
     color: '#fff',
