@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: theme.colors.primary,
-    fontSize: windowWidth / 20,
+    fontSize: windowWidth / 22,
     fontWeight: 'bold',
     textAlign: 'center',
     textTransform: 'uppercase',

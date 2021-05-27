@@ -7,7 +7,7 @@ import { isToday, timeDisplay } from '../core/utils';
 
 import { fetchDoseInfo } from '../reducers/doseReducer';
 
-const DoseInfo = () => {
+const DoseInfo = ({ navigation }) => {
   const dispatch = useDispatch();
   const lastDose = useSelector((state) => state.dose.last);
 
@@ -19,6 +19,13 @@ const DoseInfo = () => {
     dispatch(fetchDoseInfo());
   }, [dispatch]);
 
+  const goToDose = () => {
+    navigation.navigate('Add', {
+      screen: 'AddTab',
+      params: { screen: 'AddDose' },
+    });
+  };
+
   if (isDoseToday) {
     return (
       <View style={styles.container}>
@@ -26,14 +33,16 @@ const DoseInfo = () => {
         <Text style={styles.text}>
           of {lastDose.lastBrand} {lastDose.lastProduct}
         </Text>
-        <Text style={styles.text}>at {timeDisplay(lastDose.lastDosedAt)}</Text>
+        <Text style={styles.text}>
+          today at {timeDisplay(lastDose.lastDosedAt)}.
+        </Text>
       </View>
     );
   }
 
   return (
-    <TouchableOpacity style={styles.container}>
-      <Text style={styles.text}>No dose logged today</Text>
+    <TouchableOpacity onPress={goToDose} style={styles.container}>
+      <Text style={styles.text}>No dose logged today.</Text>
       <Text style={styles.text}>Add one now?</Text>
     </TouchableOpacity>
   );

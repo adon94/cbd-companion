@@ -23,8 +23,8 @@ export const fetchAllMoods = createAsyncThunk(
 
 export const sendMoods = createAsyncThunk(
   'moods/sendMoods',
-  async ({ symptoms, lifestyleFactors, doseInfo }, { dispatch }) => {
-    const response = await postMood(symptoms, lifestyleFactors, doseInfo);
+  async ({ symptoms, lifestyleFactors, selectedDate }) => {
+    const response = await postMood(symptoms, lifestyleFactors, selectedDate);
     return response;
   },
 );

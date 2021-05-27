@@ -1,13 +1,19 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import {
   setAllSymptoms,
   fetchSymptoms,
-  fetchSymptomsWithMoods,
+  setSelectedDate,
 } from '../../../reducers/symptomsReducer';
-import { sendMoods } from '../../../reducers/moodsReducer';
 
 import Layout from '../../../components/Layout';
 import BackButton from '../../../components/BackButton';
@@ -15,42 +21,45 @@ import Button from '../../../components/Button';
 import MoodInput from '../../../components/AddMoodScreen/MoodInput';
 import AddItemFooter from '../../../components/AddMoodScreen/AddItemFooter';
 import Header from '../../../components/Header';
+import Title from '../../../components/Title';
 
 import LoadingScreen from '../../LoadingScreen';
+import { dateDisplay, isToday } from '../../../core/utils';
+import { getDoseInfo } from '../../../api/database';
 
 const feels = ['1', '2', '3', '4', '5'];
-// const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
 const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const AddMood = ({ route, navigation }) => {
-  const symptoms = useSelector((state) => state.symptoms.symptoms);
-  const dispatch = useDispatch();
+const AddMood = ({ navigation }) => {
   const moodsStatus = useSelector((state) => state.moods.status);
-  const moods = useSelector((state) => state.moods.moods);
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
+  const date = useSelector((state) => state.symptoms.selectedDate);
+  const dispatch = useDispatch();
+  const [showPicker, setShowPicker] = useState(false);
+  const [doseInfo, setDoseInfo] = useState(null);
 
   useEffect(() => {
     dispatch(fetchSymptoms());
+    const sillyReq = async () => {
+      const dI = await getDoseInfo(new Date());
+      console.log('dI', dI);
+      setDoseInfo(dI);
+    };
+    sillyReq();
   }, [dispatch]);
 
-  const beforeDose = route.params ? route.params.beforeDose : false;
+  if (moodsStatus === 'loading') {
+    return <LoadingScreen />;
+  }
 
-  const prompt = beforeDose
-    ? 'How did you feel before dosing?'
-    : 'How did you feel today?';
+  const prompt = isToday(new Date(date))
+    ? 'How did you feel today?'
+    : 'How did you feel that day?';
 
   const submit = async () => {
-    navigation.navigate('AddLifestyle');
-    // try {
-    //   const resultAction = await dispatch(sendMoods(symptoms));
-    //   if (resultAction.meta.requestStatus === 'fulfilled') {
-    //     dispatch(fetchSymptomsWithMoods());
-    //     navigation.navigate('Entries');
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    navigation.navigate('AddLifestyle', { doseInfo });
   };
 
   const updateIndexAt = (rating, index) => {
@@ -62,21 +71,26 @@ const AddMood = ({ route, navigation }) => {
     dispatch(setAllSymptoms(newArr));
   };
 
-  if (moodsStatus === 'loading') {
-    return <LoadingScreen />;
-  }
+  const onDateChange = async (selectedDate) => {
+    dispatch(setSelectedDate(new Date(selectedDate).toISOString()));
+    const dI = await getDoseInfo(new Date(selectedDate));
+    setDoseInfo(dI);
+    setShowPicker(false);
+  };
 
   return (
     <Layout>
       <BackButton onPress={() => navigation.goBack()} />
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
-          {/* <TouchableOpacity
-            style={styles.doseContainer}
-            onPress={() => navigation.navigate('AddDosage')}>
-            <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
+          <TouchableOpacity
+            onPress={() => setShowPicker(true)}
+            style={styles.doseContainer}>
+            <Title style={styles.smallTitle}>
+              {dateDisplay(new Date(date))}
+            </Title>
             <Title style={styles.smallTitle}>(Tap to change)</Title>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <Header centered>{prompt}</Header>
         </View>
         {symptoms && symptoms.length > 0 ? (
@@ -110,6 +124,14 @@ const AddMood = ({ route, navigation }) => {
           <Button onPress={submit}>Next</Button>
         </View>
       </View>
+      <DateTimePickerModal
+        maximumDate={new Date()}
+        date={new Date(date)}
+        isVisible={showPicker}
+        mode="date"
+        onConfirm={onDateChange}
+        onCancel={() => setShowPicker(false)}
+      />
     </Layout>
   );
 };
@@ -125,6 +147,7 @@ const styles = StyleSheet.create({
   containerWithPadding: {
     paddingHorizontal: 20,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonContainer: {
     justifyContent: 'flex-end',

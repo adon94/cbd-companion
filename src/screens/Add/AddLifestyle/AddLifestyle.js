@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, FlatList, Dimensions, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
 
@@ -17,7 +17,6 @@ import AddItemFooter from '../../../components/AddMoodScreen/AddItemFooter';
 import Header from '../../../components/Header';
 
 import LoadingScreen from '../../LoadingScreen';
-import { isToday } from '../../../core/utils';
 
 const feels = ['No', 'Yes'];
 // const symptoms = ['Anxiety', 'Physical Pain', 'Sleep']; // get these from user's firebase
@@ -25,41 +24,63 @@ const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const AddLifestyle = ({ navigation }) => {
+const AddLifestyle = ({ navigation, route: { params } }) => {
+  const { doseInfo } = params || null;
   const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
   const symptoms = useSelector((state) => state.symptoms.symptoms);
-  const lastDose = useSelector((state) => state.dose.last);
+  const selectedDate = useSelector((state) => state.symptoms.selectedDate);
   const dispatch = useDispatch();
   const moodsStatus = useSelector((state) => state.moods.status);
+  const [alertShown, setAlertShown] = useState(false);
 
   useEffect(() => {
     dispatch(fetchLifestyle());
   }, [dispatch]);
 
+  const showAlert = () =>
+    Alert.alert(
+      'No dose logged for today',
+      'Would you like to add one now?',
+      [
+        {
+          text: 'Yes',
+          onPress: () => Alert.alert('Yes Pressed'), // open dose
+          style: 'default',
+        },
+        {
+          text: 'No',
+          onPress: () => submit(),
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {
+          setAlertShown(true);
+        },
+      },
+    );
+
   const submit = async () => {
-    // navigation.navigate('');
-    // navigation.navigate('AddDosage');
-    // if (lastDose.lastDosedAt && isToday(lastDose.lastDosedAt)) {
-    let { onboarded, ...doseInfo } = lastDose;
-    console.log('doseInfo', doseInfo);
-    if (!doseInfo.lastDosedAt || !isToday(new Date(doseInfo.lastDosedAt))) {
-      doseInfo = null;
-    }
-    try {
-      const resultAction = await dispatch(
-        sendMoods({ symptoms, lifestyleFactors, doseInfo }),
-      );
-      if (resultAction.meta.requestStatus === 'fulfilled') {
-        dispatch(fetchSymptomsWithMoods());
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Entries' }],
-          }),
+    if (!doseInfo && !alertShown) {
+      showAlert();
+    } else {
+      try {
+        const resultAction = await dispatch(
+          sendMoods({ symptoms, lifestyleFactors, selectedDate }),
         );
+        if (resultAction.meta.requestStatus === 'fulfilled') {
+          dispatch(fetchSymptomsWithMoods());
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Entries' }],
+            }),
+          );
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -80,12 +101,6 @@ const AddLifestyle = ({ navigation }) => {
     <Layout>
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
-          {/* <TouchableOpacity
-            style={styles.doseContainer}
-            onPress={() => navigation.navigate('AddDosage')}>
-            <Title style={styles.smallTitle}>16mg dosage at 9:00am</Title>
-            <Title style={styles.smallTitle}>(Tap to change)</Title>
-          </TouchableOpacity> */}
           <Header centered>Lifestyle Factors</Header>
         </View>
         {lifestyleFactors && lifestyleFactors.length > 0 ? (

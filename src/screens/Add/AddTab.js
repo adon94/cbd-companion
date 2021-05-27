@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import SymptomTextInput from './CustomInput/CustomInput';
 import AddMood from './AddMood/AddMood';
-import AddDosage from './AddDosage/AddDosage';
+import AddDose from './AddDose/AddDose';
 import AddLifestyle from './AddLifestyle/AddLifestyle';
 import AddSymptom from './AddSymptom/AddSymptom';
 import SelectOption from './SelectOption';
@@ -18,7 +18,7 @@ const Add = () => {
       <Stack.Screen name="SelectOption" component={SelectOption} />
       <Stack.Screen name="AddMood" component={AddMood} />
       <Stack.Screen name="AddLifestyle" component={AddLifestyle} />
-      <Stack.Screen name="AddDosage" component={AddDosage} />
+      <Stack.Screen name="AddDose" component={AddDose} />
       <Stack.Screen name="AddProduct" component={AddProduct} />
     </Stack.Navigator>
   );
@@ -28,13 +28,12 @@ const RootStackScreen = () => {
   return (
     <RootStack.Navigator mode="modal" headerMode="none">
       <RootStack.Screen
-        name="Main"
+        name="AddTab"
         component={Add}
         options={{ headerShown: false }}
       />
       <RootStack.Screen name="SymptomTextInput" component={SymptomTextInput} />
       <RootStack.Screen name="AddSymptom" component={AddSymptom} />
-      {/* <RootStack.Screen name="AddDosage" component={AddDosage} /> */}
     </RootStack.Navigator>
   );
 };

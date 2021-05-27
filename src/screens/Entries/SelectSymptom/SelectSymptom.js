@@ -15,6 +15,7 @@ import { setViewingSymptom } from '../../../reducers/viewingSymptomReducer';
 import Layout from '../../../components/Layout';
 import Button from '../../../components/Button';
 import { fetchAllMoods, fetchWeekMoods } from '../../../reducers/moodsReducer';
+import Header from '../../../components/Header';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -45,6 +46,9 @@ const SelectSymptom = ({ navigation, route: { params } }) => {
   return (
     <Layout>
       <SafeAreaView style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Header>Show me info for...</Header>
+        </View>
         <FlatList
           data={symptoms}
           renderItem={({ item, index }) => (
@@ -80,6 +84,10 @@ const styles = StyleSheet.create({
     fontSize: screenWidth / 12,
     color: '#ffffff',
     fontWeight: 'bold',
+  },
+  headerContainer: {
+    paddingHorizontal: 20,
+    width: '80%',
   },
   container: {
     flex: 1,

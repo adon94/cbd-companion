@@ -27,7 +27,7 @@ const SelectAdd = ({ navigation }) => {
   const dosedToday = lastDosedAt ? isToday(new Date(lastDosedAt)) : false;
 
   const dose = () => {
-    navigation.navigate('AddDosage');
+    navigation.navigate('AddDose');
   };
 
   const mood = () => {
@@ -56,7 +56,7 @@ const SelectAdd = ({ navigation }) => {
               <Ionicons name="heart" size={45} color="#ffffff" />
             </View>
             <Text style={styles.buttonText}>{`${
-              dosedToday ? "change today's" : 'add'
+              moodDone ? "change today's" : 'add'
             } mood`}</Text>
           </TouchableOpacity>
         </View>
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
+    width: 150,
   },
   small: {
     transform: [{ scale: 0.8 }],
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     textTransform: 'uppercase',
+    flexWrap: 'wrap',
   },
 });
 

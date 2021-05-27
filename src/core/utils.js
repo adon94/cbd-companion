@@ -71,7 +71,7 @@ export const getMonday = () => {
   return monday;
 };
 
-export const getTodayString = (date) => {
+export const getDateString = (date) => {
   const year = date.getFullYear();
   let month = date.getMonth() + 1;
   let dt = date.getDate();
@@ -91,5 +91,59 @@ export const isToday = (someDate) => {
     someDate.getDate() === today.getDate() &&
     someDate.getMonth() === today.getMonth() &&
     someDate.getFullYear() === today.getFullYear()
+  );
+};
+
+const daysDiff = (date) => {
+  const now = new Date();
+
+  const timeDiff = now.getTime() - date.getTime();
+  return Math.round(timeDiff / (1000 * 3600 * 24));
+};
+
+export const dateTimeDisplay = (dateTime) => {
+  const date = new Date(dateTime);
+
+  if (isToday(date)) {
+    return `Today, ${date.toLocaleTimeString('en-GB', {
+      hour: 'numeric',
+      minute: 'numeric',
+    })}`;
+  }
+
+  const daysBetween = daysDiff(date);
+
+  if (daysBetween === 1) {
+    return `Yesterday, ${date.toLocaleTimeString('en-GB', {
+      hour: 'numeric',
+      minute: 'numeric',
+    })}`;
+  }
+
+  if (daysBetween < 7) {
+    return `${date.toLocaleTimeString('en-GB', {
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+    })}`;
+  }
+
+  const options = {
+    hour: 'numeric',
+    minute: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+
+  return date.toLocaleDateString('en-GB', options);
+};
+
+export const sameDay = (d1Str, d2Str) => {
+  const d1 = new Date(d1Str);
+  const d2 = new Date(d2Str);
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
   );
 };

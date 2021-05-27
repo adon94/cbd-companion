@@ -1,17 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-import { getMonday, getTodayString } from '../core/utils';
+import { getMonday, getDateString, sameDay } from '../core/utils';
 
 // potentially a brands ref
 const usersRef = firestore().collection('Users');
-
-async function incrementTest() {
-  const increment = firestore.FieldValue.increment(1);
-  const ref = firestore().collection('test').doc('count');
-
-  await ref.set({ logged: increment }, { merge: true });
-}
 
 /* TODO
 - Edit a previously input "mood"
@@ -20,47 +13,47 @@ async function incrementTest() {
 - Split dosage and mood
 - Ask mood 6 hours later
 */
-async function addMood(symptoms, lifestyleFactors, doseInfo) {
-  // await incrementTest();
-  const date = new Date();
-
+async function addMood(
+  symptoms,
+  lifestyleFactors,
+  selectedDate = new Date().toISOString(),
+) {
+  const date = new Date(selectedDate);
   // date.setDate(date.getDate() - 3);
   // const timestamp = firestore.FieldValue.serverTimestamp();
   const timestamp = date.toISOString();
-  const today = getTodayString(date);
+  const dateString = getDateString(date);
 
   const user = auth().currentUser;
-  const userDayRef = usersRef.doc(user.uid).collection('days').doc(today);
+  const userDayRef = usersRef.doc(user.uid).collection('days').doc(dateString);
 
   const batch = firestore().batch();
-  console.log('here1');
   const increment = firestore.FieldValue.increment(1);
 
-  // add each symptom for today and the current time with it's rating
-  console.log(symptoms);
+  // add each symptom for date and the current time with it's rating
   symptoms.forEach((symptom, i) => {
-    console.log('here2', i);
     const baseRef = usersRef
       .doc(user.uid)
       .collection('symptoms')
       .doc(symptom.displayName);
 
-    const daysRef = baseRef.collection('days').doc(today);
+    const daysRef = baseRef.collection('days').doc(dateString);
 
-    const {
-      lastDoseAmount: doseAmount,
-      lastDosedAt: dosedAt,
-      lastBrand: brand,
-      lastProduct: product,
-    } = doseInfo;
+    batch.set(
+      daysRef,
+      {
+        ...symptom,
+        timestamp,
+      },
+      { merge: true },
+    );
 
-    batch.set(daysRef, {
+    const daySymptomsRef = userDayRef
+      .collection('symptoms')
+      .doc(symptom.displayName);
+
+    batch.set(daySymptomsRef, {
       ...symptom,
-      ...doseInfo,
-      doseAmount,
-      dosedAt,
-      brand,
-      product,
       timestamp,
     });
 
@@ -73,7 +66,6 @@ async function addMood(symptoms, lifestyleFactors, doseInfo) {
       ),
       {},
     );
-    console.log(factorsObj);
 
     batch.set(
       ratingsRef,
@@ -82,30 +74,18 @@ async function addMood(symptoms, lifestyleFactors, doseInfo) {
       },
       { merge: true },
     );
-
-    // const daySymptomsRef = userDayRef
-    //   .collection('symptoms')
-    //   .doc(symptom.displayName);
-
-    // batch.set(daySymptomsRef, {
-    //   ...symptom,
-    //   ...doseInfo,
-    //   timestamp,
-    // });
   });
 
   const factorsObj = {};
 
-  console.log('here3');
   // add each lifestyle factor for today with it's value
   lifestyleFactors.forEach((factor, i) => {
-    console.log('here3', i);
     const ref = usersRef
       .doc(user.uid)
       .collection('lifestyleFactors')
       .doc(factor.displayName)
       .collection('days')
-      .doc(today);
+      .doc(dateString);
 
     factorsObj[factor.displayName] = factor.rating === 2;
 
@@ -123,13 +103,11 @@ async function addMood(symptoms, lifestyleFactors, doseInfo) {
       timestamp,
     });
   });
-  console.log('here4');
 
   await batch.commit();
 }
 
 async function getFactorsCountByRating(rating, symptomName) {
-  const factors = [];
   const user = auth().currentUser;
   return usersRef
     .doc(user.uid)
@@ -164,34 +142,63 @@ async function getMoodsBySymptom(symptomName) {
     });
 }
 
-async function addDose(dose) {
+async function addDose(dose, ogLastDosedAt, symptomNames) {
+  const { dosedAt } = dose;
   const batch = firestore().batch();
   const user = auth().currentUser;
   const userRef = usersRef.doc(user.uid);
-  const date = new Date();
-  const today = getTodayString(date);
-  const userDayRef = userRef.collection('days').doc(today);
+  const date = new Date(dosedAt);
+  const dateString = getDateString(date);
+  const userDayRef = userRef.collection('days').doc(dateString);
 
-  batch.set(userDayRef, dose);
+  batch.set(userDayRef, dose, { merge: true });
 
-  batch.set(userRef, {
-    lastDosedAt: dose.dosedAt,
-    lastBrand: dose.brand,
-    lastProduct: dose.product,
-    lastDoseAmount: dose.doseAmount || '1 drop',
-    onboarded: true,
+  symptomNames.forEach((sName) => {
+    const ref = usersRef
+      .doc(user.uid)
+      .collection('symptoms')
+      .doc(sName)
+      .collection('days')
+      .doc(dateString);
+
+    batch.set(ref, dose, { merge: true });
   });
+
+  if (dosedAt > ogLastDosedAt || sameDay(ogLastDosedAt, dosedAt)) {
+    batch.set(
+      userRef,
+      {
+        lastDosedAt: dosedAt,
+        lastBrand: dose.brand,
+        lastProduct: dose.product,
+        lastDoseAmount: dose.doseAmount || '1 drop',
+      },
+      { merge: true },
+    );
+  }
 
   await batch.commit();
 }
 
-async function getDoseInfo() {
+async function getDoseInfo(selectedDate = new Date()) {
+  const date = getDateString(selectedDate);
+  const user = auth().currentUser;
+  return usersRef
+    .doc(user.uid)
+    .collection('days')
+    .doc(date)
+    .get()
+    .then((documentSnapshot) => {
+      return documentSnapshot.data();
+    });
+}
+
+async function getLastDoseInfo() {
   const user = auth().currentUser;
   return usersRef
     .doc(user.uid)
     .get()
     .then((documentSnapshot) => {
-      console.log(documentSnapshot.data());
       return documentSnapshot.data();
     });
 }
@@ -456,5 +463,6 @@ export {
   getSymptomsOnDay,
   getFactorsCountByRating,
   addDose,
+  getLastDoseInfo,
   getDoseInfo,
 };

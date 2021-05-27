@@ -19,6 +19,16 @@ export const fetchSymptomsWithMoods = createAsyncThunk(
   },
 );
 
+// might do something with this for editing already set data
+// not very high priority
+// export const getSymptomsOnDay = createAsyncThunk(
+//   'symptoms/getSymptomsOnDay',
+//   async ({ date, symptom }, { dispatch }) => {
+//     const response = await fetchSymptomsOnDay();
+//     return response;
+//   },
+// );
+
 export const sendSymptomEdits = createAsyncThunk(
   'symptoms/sendSymptomEdits',
   async ({ toAdd, toRemove }, { dispatch }) => {
@@ -31,6 +41,7 @@ const symptomsReducer = createSlice({
   name: 'symptoms',
   initialState: {
     symptoms: [],
+    selectedDate: new Date().toISOString(),
     status: 'idle',
     error: null,
   },
@@ -42,6 +53,13 @@ const symptomsReducer = createSlice({
       return {
         ...state,
         symptoms: action.payload,
+      };
+    },
+    setSelectedDate: (state, action) => {
+      console.log('setting');
+      return {
+        ...state,
+        selectedDate: new Date(action.payload).toISOString(),
       };
     },
   },
@@ -90,6 +108,7 @@ const symptomsReducer = createSlice({
   },
 });
 
-export const { addSymptom, setAllSymptoms } = symptomsReducer.actions;
+export const { addSymptom, setAllSymptoms, setSelectedDate } =
+  symptomsReducer.actions;
 
 export default symptomsReducer.reducer;

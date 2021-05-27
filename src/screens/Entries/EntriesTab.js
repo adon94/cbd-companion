@@ -21,7 +21,7 @@ const RootStackScreen = () => {
   return (
     <RootStack.Navigator mode="modal" headerMode="none">
       <RootStack.Screen
-        name="Main"
+        name="EntriesTab"
         component={Main}
         options={{ headerShown: false }}
       />

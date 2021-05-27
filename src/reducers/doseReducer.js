@@ -1,14 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { addDose, getDoseInfo } from '../api/database';
+import { addDose, getLastDoseInfo } from '../api/database';
 
-export const sendDose = createAsyncThunk('dose/sendDose', async (dose) => {
-  await addDose(dose);
-});
+export const sendDose = createAsyncThunk(
+  'dose/sendDose',
+  async (dose, { getState }) => {
+    const {
+      dose: {
+        last: { lastDosedAt },
+      },
+      symptoms: { symptoms },
+    } = getState();
+    const symptomNames = symptoms.map((symp) => symp.displayName);
+    await addDose(dose, lastDosedAt, symptomNames);
+  },
+);
 
 export const fetchDoseInfo = createAsyncThunk(
   'dose/fetchDoseInfo',
   async () => {
-    const response = await getDoseInfo();
+    const response = await getLastDoseInfo();
     return response;
   },
 );
@@ -66,6 +76,14 @@ const doseReducer = createSlice({
         lastMg,
         lastMl,
       } = action.payload;
+      const l = new Date(lastDosedAt);
+      const dosedAt = lastDosedAt
+        ? new Date(
+            new Date(new Date().setHours(l.getHours())).setMinutes(
+              l.getMinutes(),
+            ),
+          ).toISOString()
+        : new Date().toISOString();
       return {
         ...state,
         status: 'idle',
@@ -80,7 +98,7 @@ const doseReducer = createSlice({
         },
         doseInfo: {
           ...state.doseInfo,
-          dosedAt: lastDosedAt ? lastDosedAt : new Date().toISOString(),
+          dosedAt,
           mg: state.doseInfo.mg ? state.doseInfo.mg : lastMg,
           ml: state.doseInfo.ml ? state.doseInfo.ml : lastMl,
           doseAmount: state.doseInfo.lastDoseAmount

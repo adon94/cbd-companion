@@ -94,7 +94,7 @@ const Entries = ({ navigation }) => {
         }}>
         <Animated.View style={{ opacity: headerOpacity }}>
           <Text style={[styles.title]}>My CBD Journal</Text>
-          <DoseInfo />
+          <DoseInfo navigation={navigation} />
         </Animated.View>
         <Animated.View
           style={[
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   flatList: {
     paddingTop: HEADER_MAX_HEIGHT + 25,
     paddingHorizontal: 20,
+    paddingBottom: 50,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },

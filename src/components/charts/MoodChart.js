@@ -41,7 +41,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
   if (average && displayDay) {
     xAxisData = moods.map(({ timestamp, doseAmount }) => ({
       day: getDayName(timestamp),
-      doseAmount: `${doseAmount || 0}`,
+      doseAmount: `${doseAmount || 'N/A'}`,
     }));
   } else if (average) {
     xAxisData = moods.map((mood) => ({ day: numericDate(mood.timestamp) }));

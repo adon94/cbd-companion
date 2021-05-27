@@ -9,8 +9,7 @@ import Button from '../../../components/Button';
 import BackButton from '../../../components/BackButton';
 import MyPicker from './MyPicker';
 
-import { theme } from '../../../core/theme';
-import { timeDisplay } from '../../../core/utils';
+import { dateTimeDisplay } from '../../../core/utils';
 import {
   fetchDoseInfo,
   sendDose,
@@ -21,7 +20,7 @@ import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 const drops = ['1 drop', '2 drops', '3 drops', '4 drops', '5 drops', '6 drops'];
 const windowWidth = Dimensions.get('window').width;
 
-const AddDosage = ({ navigation }) => {
+const AddDose = ({ navigation }) => {
   const dispatch = useDispatch();
   const dose = useSelector((state) => state.dose.doseInfo);
   const [show, setShow] = useState(false);
@@ -81,19 +80,8 @@ const AddDosage = ({ navigation }) => {
             {dose.brand ? `${dose.brand} ${dose.product}` : 'Select a product'}
           </Button>
           <Text style={styles.regText}>at</Text>
-          {/* <View style={{ alignItems: 'center', width: 300 }}>
-            <DateTimePicker
-              style={styles.button}
-              // testID="dateTimePicker"
-              value={time}
-              mode={'time'}
-              is24Hour={true}
-              display="compact"
-              onChange={onTimeChange}
-            />
-          </View> */}
           <Button outlined capitalize onPress={() => setShowDt(!show)}>
-            Today, {timeDisplay(dose.dosedAt || new Date().toISOString())}
+            {dateTimeDisplay(dose.dosedAt || new Date().toISOString())}
           </Button>
         </View>
         <Button fullWidth onPress={() => submit()}>
@@ -108,6 +96,7 @@ const AddDosage = ({ navigation }) => {
         selectedValue={dose.doseAmount || '1 drop'}
       />
       <DateTimePickerModal
+        maximumDate={new Date()}
         date={dose.dosedAt ? new Date(dose.dosedAt) : new Date()}
         isVisible={showDt}
         mode="datetime"
@@ -168,4 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddDosage;
+export default AddDose;

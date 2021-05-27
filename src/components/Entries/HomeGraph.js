@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { useState } from 'react/cjs/react.development';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import MoodChart from '../charts/MoodChart';
 
-import { getMonday } from '../../core/utils';
+import Button from '../Button';
 
 const WEEK = 'This week';
 const OVERALL = 'Overall';
@@ -36,11 +37,30 @@ const HomeGraph = ({ moods }) => {
     }
   };
 
+  if (!showStats) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Ionicons
+          style={styles.icon}
+          name="journal"
+          size={145}
+          color="#ffffff"
+        />
+        <Text style={styles.titleText}>No entries this week</Text>
+        <Text style={[styles.infoText, styles.icon]}>
+          If you took CBD several hours ago, now is a good time to log your
+          mood.
+        </Text>
+        <Button capitalize>How do you feel?</Button>
+      </View>
+    );
+  }
+
   return (
     <View>
       <TouchableOpacity onPress={toggleView}>
         <Text style={styles.titleText}>
-          {showStats ? view : `No entries${view === WEEK && ' this week'}`}
+          {showStats ? view : `No entries${view === WEEK && ' this week.'}`}
         </Text>
       </TouchableOpacity>
       {showStats && (
@@ -51,6 +71,17 @@ const HomeGraph = ({ moods }) => {
 };
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  icon: { marginBottom: 25 },
+  infoText: {
+    color: '#ffffff',
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   titleText: {
     color: '#ffffff',
     fontWeight: 'bold',
