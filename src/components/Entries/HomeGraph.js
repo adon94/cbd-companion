@@ -9,23 +9,8 @@ import Button from '../Button';
 const WEEK = 'This week';
 const OVERALL = 'Overall';
 
-const HomeGraph = ({ moods }) => {
+const HomeGraph = ({ moods, navigation }) => {
   const [view, setView] = useState(WEEK);
-  // let data = [];
-
-  // if (view === WEEK) {
-  // const monday = getMonday();
-  //   const thisWeek = [];
-  //   moods.some((el) => {
-  //     const notThisWeek = new Date(el.timestamp) < monday;
-  //     if (!notThisWeek) {
-  //       data.push(el);
-  //     }
-  //     return notThisWeek;
-  //   });
-  // } else {
-  //   data = [...moods];
-  // }
 
   const showStats = moods.length > 0;
 
@@ -35,6 +20,13 @@ const HomeGraph = ({ moods }) => {
     } else {
       setView(WEEK);
     }
+  };
+
+  const goToAdd = () => {
+    navigation.navigate('Add', {
+      screen: 'AddTab',
+      params: { screen: 'AddMood' },
+    });
   };
 
   if (!showStats) {
@@ -51,7 +43,9 @@ const HomeGraph = ({ moods }) => {
           If you took CBD several hours ago, now is a good time to log your
           mood.
         </Text>
-        <Button capitalize>How do you feel?</Button>
+        <Button onPress={goToAdd} capitalize>
+          How do you feel?
+        </Button>
       </View>
     );
   }

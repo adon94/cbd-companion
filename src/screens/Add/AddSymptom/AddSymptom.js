@@ -62,7 +62,7 @@ const AddSymptom = ({ navigation, route: { params } }) => {
         />
         <View>
           <Button onPress={submit}>Save</Button>
-          <Button mode="outlined" onPress={cancel}>
+          <Button cancel onPress={cancel}>
             Cancel
           </Button>
         </View>

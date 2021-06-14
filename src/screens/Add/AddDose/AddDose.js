@@ -94,6 +94,7 @@ const AddDose = ({ navigation }) => {
         show={show}
         hide={() => setShow(false)}
         selectedValue={dose.doseAmount || '1 drop'}
+        showOption
       />
       <DateTimePickerModal
         maximumDate={new Date()}

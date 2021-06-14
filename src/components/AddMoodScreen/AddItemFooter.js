@@ -5,36 +5,37 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
 
-const boxSize = 40;
+const boxSize = 35;
 
 const AddItemFooter = ({ onPress, children }) => {
   return (
-    <View style={styles.symptomContainer}>
+    <TouchableOpacity style={styles.symptomContainer} onPress={onPress}>
+      <View style={styles.boxesContainer}>
+        <Ionicons name="pencil" size={windowWidth / 20} color="#ffffff" />
+      </View>
       <Text style={styles.symptomText}>{children}</Text>
-      <TouchableOpacity style={styles.boxesContainer} onPress={onPress}>
-        <Ionicons name="add" size={windowWidth / 17} color="#ffffff" />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   symptomContainer: {
-    paddingHorizontal: 20,
-    marginTop: 35,
+    paddingRight: 20,
+    marginTop: 10,
     alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
   },
   symptomText: {
     color: '#fff',
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 17,
     textAlign: 'center',
   },
   boxesContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
-    backgroundColor: '#f0f0f04D',
+    // marginRight: 10,
+    // backgroundColor: '#f0f0f04D',
     borderRadius: 100,
     height: boxSize,
     width: boxSize,

@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 90,
     justifyContent: 'center',
+    marginTop: 25,
   },
   plainContainer: {
     padding: 20,

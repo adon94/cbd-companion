@@ -62,26 +62,26 @@ const AddLifestyle = ({ navigation, route: { params } }) => {
     );
 
   const submit = async () => {
-    if (!doseInfo && !alertShown) {
-      showAlert();
-    } else {
-      try {
-        const resultAction = await dispatch(
-          sendMoods({ symptoms, lifestyleFactors, selectedDate }),
+    // if (!doseInfo && !alertShown) {
+    //   showAlert();
+    // } else {
+    try {
+      const resultAction = await dispatch(
+        sendMoods({ symptoms, lifestyleFactors, selectedDate }),
+      );
+      if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchSymptomsWithMoods());
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Entries' }],
+          }),
         );
-        if (resultAction.meta.requestStatus === 'fulfilled') {
-          dispatch(fetchSymptomsWithMoods());
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Entries' }],
-            }),
-          );
-        }
-      } catch (err) {
-        console.log(err);
       }
+    } catch (err) {
+      console.log(err);
     }
+    // }
   };
 
   const updateIndexAt = (rating, index) => {
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
   containerWithPadding: {
     paddingHorizontal: 20,
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
   buttonContainer: {
     justifyContent: 'space-between',

@@ -117,7 +117,9 @@ const Entries = ({ navigation }) => {
       </Animated.View>
       <SafeAreaView style={styles.container}>
         <Animated.FlatList
-          ListHeaderComponent={() => <HomeGraph moods={moods} />}
+          ListHeaderComponent={() => (
+            <HomeGraph moods={moods} navigation={navigation} />
+          )}
           data={moods}
           renderItem={({ item }) => (
             <EntryItem

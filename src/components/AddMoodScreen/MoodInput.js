@@ -8,7 +8,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
+const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle, addRating }) => {
   const [rating, setRating] = useState();
 
   useEffect(() => {
@@ -17,14 +17,19 @@ const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
     }
   }, []);
 
-  const setActive = (index) => {
-    if (index + 1 === rating) {
+  const setActive = (r) => {
+    if (r === rating) {
       setRating(null);
       setSymptoms(null);
     } else {
-      setRating(index + 1);
-      setSymptoms(index + 1);
+      setRating(r);
+      setSymptoms(r);
     }
+  };
+
+  const onRating = (r) => {
+    setActive(r);
+    addRating(r);
   };
 
   return (
@@ -36,7 +41,7 @@ const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
             key={feel}
             active={index + 1 === rating}
             isLifestyle={isLifestyle}
-            onPress={() => setActive(index)}>
+            onPress={() => onRating(index + 1)}>
             {feel}
           </RatingButton>
         ))}
@@ -47,21 +52,29 @@ const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle }) => {
 
 const styles = StyleSheet.create({
   symptomContainer: {
-    paddingHorizontal: 0,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: '#f0f0f04D',
+    // paddingVertical: 60,
+    height: windowHeight / 4,
+    paddingHorizontal: 20,
     marginTop: 35,
-    width: windowWidth * (isBigPhone ? 0.95 : 0.95), // leaves a space-between boxes of 10% ww
+    width: windowWidth - 40,
+    justifyContent: 'center',
   },
   symptomText: {
     color: '#fff',
     fontSize: windowWidth / 17,
     fontWeight: 'bold',
     textAlign: 'center',
+    flexWrap: 'wrap',
+    marginBottom: 10,
   },
   boxesContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: 40,
-    marginTop: 5,
+    marginTop: 10,
   },
 });
 

@@ -35,7 +35,7 @@ const CustomInput = ({ navigation }) => {
         </View>
         <View>
           <Button onPress={addItem}>Add</Button>
-          <Button mode="outlined" onPress={() => navigation.goBack()}>
+          <Button cancel onPress={() => navigation.goBack()}>
             Cancel
           </Button>
         </View>
