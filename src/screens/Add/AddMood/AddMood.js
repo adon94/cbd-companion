@@ -44,7 +44,6 @@ const AddMood = ({ navigation }) => {
     dispatch(fetchSymptoms());
     const sillyReq = async () => {
       const dI = await getDoseInfo(new Date());
-      console.log('dI', dI);
       setDoseInfo(dI);
     };
     sillyReq();

@@ -20,7 +20,7 @@ import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 const drops = ['1 drop', '2 drops', '3 drops', '4 drops', '5 drops', '6 drops'];
 const windowWidth = Dimensions.get('window').width;
 
-const AddDose = ({ navigation }) => {
+const AddDose = ({ navigation, route: { params } }) => {
   const dispatch = useDispatch();
   const dose = useSelector((state) => state.dose.doseInfo);
   const [show, setShow] = useState(false);
@@ -60,9 +60,22 @@ const AddDose = ({ navigation }) => {
     }
   };
 
+  const goBack = () => {
+    if (params?.previousScreen === 'Entries') {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Entries' }],
+        }),
+      );
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <Layout>
-      <BackButton onPress={() => navigation.goBack()} />
+      <BackButton onPress={() => goBack()} />
       <View style={styles.container}>
         <Text style={styles.questionText}>Confirm dose</Text>
         <View>

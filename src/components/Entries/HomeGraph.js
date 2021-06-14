@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 
 import MoodChart from '../charts/MoodChart';
+import { isToday } from '../../core/utils';
 
 import Button from '../Button';
 
@@ -11,6 +13,11 @@ const OVERALL = 'Overall';
 
 const HomeGraph = ({ moods, navigation }) => {
   const [view, setView] = useState(WEEK);
+  const lastDose = useSelector((state) => state.dose.last);
+
+  const isDoseToday = lastDose.lastDosedAt
+    ? isToday(new Date(lastDose.lastDosedAt))
+    : false;
 
   const showStats = moods.length > 0;
 
@@ -22,10 +29,10 @@ const HomeGraph = ({ moods, navigation }) => {
     }
   };
 
-  const goToAdd = () => {
+  const goToAdd = (screen) => {
     navigation.navigate('Add', {
       screen: 'AddTab',
-      params: { screen: 'AddMood' },
+      params: { screen, params: { previousScreen: 'Entries' } },
     });
   };
 
@@ -39,13 +46,26 @@ const HomeGraph = ({ moods, navigation }) => {
           color="#ffffff"
         />
         <Text style={styles.titleText}>No entries this week</Text>
-        <Text style={[styles.infoText, styles.icon]}>
-          If you took CBD several hours ago, now is a good time to log your
-          mood.
-        </Text>
-        <Button onPress={goToAdd} capitalize>
-          How do you feel?
-        </Button>
+        {isDoseToday ? (
+          <>
+            <Text style={[styles.infoText, styles.icon]}>
+              If you took CBD several hours ago, now is a good time to log your
+              mood.
+            </Text>
+            <Button onPress={() => goToAdd('AddMood')} capitalize>
+              How do you feel?
+            </Button>
+          </>
+        ) : (
+          <>
+            <Text style={[styles.infoText, styles.icon]}>
+              If you just took CBD, now is a good time to confirm your dose.
+            </Text>
+            <Button onPress={() => goToAdd('AddDose')} capitalize>
+              Confirm dose
+            </Button>
+          </>
+        )}
       </View>
     );
   }

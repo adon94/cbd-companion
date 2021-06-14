@@ -8,12 +8,15 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { CommonActions } from '@react-navigation/native';
 
 import {
   setAllSymptoms,
   fetchSymptoms,
   setSelectedDate,
+  fetchSymptomsWithMoods,
 } from '../../../reducers/symptomsReducer';
+import { sendMoods } from '../../../reducers/moodsReducer';
 
 import Layout from '../../../components/Layout';
 import BackButton from '../../../components/BackButton';
@@ -37,7 +40,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const isBigPhone = windowHeight > 700;
 
-const AddDay = ({ navigation }) => {
+const AddDay = ({ navigation, route: { params } }) => {
   const moodsStatus = useSelector((state) => state.moods.status);
   const symptoms = useSelector((state) => state.symptoms.symptoms);
   const lifestyleFactors = useSelector((state) => state.lifestyle.lifestyle);
@@ -69,7 +72,23 @@ const AddDay = ({ navigation }) => {
     : 'How did you feel that day?';
 
   const submit = async () => {
-    navigation.navigate('AddLifestyle', { doseInfo });
+    // navigation.navigate('AddLifestyle', { doseInfo });
+    try {
+      const resultAction = await dispatch(
+        sendMoods({ symptoms, lifestyleFactors, date }),
+      );
+      if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchSymptomsWithMoods());
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Entries' }],
+          }),
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const updateIndexAt = (rating, index) => {
@@ -110,9 +129,22 @@ const AddDay = ({ navigation }) => {
     console.log(listItems);
   };
 
+  const goBack = () => {
+    if (params?.previousScreen === 'Entries') {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Entries' }],
+        }),
+      );
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <Layout>
-      <BackButton onPress={() => navigation.goBack()} />
+      <BackButton onPress={() => goBack()} />
       <View style={styles.container}>
         <View style={styles.containerWithPadding}>
           <TouchableOpacity

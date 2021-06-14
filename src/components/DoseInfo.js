@@ -1,28 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { theme } from '../core/theme';
 
 import { isToday, timeDisplay } from '../core/utils';
 
-import { fetchDoseInfo } from '../reducers/doseReducer';
-
 const DoseInfo = ({ navigation }) => {
-  const dispatch = useDispatch();
   const lastDose = useSelector((state) => state.dose.last);
 
   const isDoseToday = lastDose.lastDosedAt
     ? isToday(new Date(lastDose.lastDosedAt))
     : false;
 
-  useEffect(() => {
-    dispatch(fetchDoseInfo());
-  }, [dispatch]);
-
   const goToDose = () => {
     navigation.navigate('Add', {
       screen: 'AddTab',
-      params: { screen: 'AddDose' },
+      params: { screen: 'AddDose', params: { previousScreen: 'Entries' } },
     });
   };
 

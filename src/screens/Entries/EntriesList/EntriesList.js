@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { signOut } from '../../../api/auth';
 import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
+import { fetchDoseInfo } from '../../../reducers/doseReducer';
 
 import Layout from '../../../components/Layout';
 import DoseInfo from '../../../components/DoseInfo';
@@ -45,6 +46,7 @@ const Entries = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(fetchSymptomsWithMoods());
+    dispatch(fetchDoseInfo());
   }, [dispatch]);
 
   const logout = () => {
