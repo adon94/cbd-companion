@@ -45,9 +45,7 @@ const SelectAdd = ({ navigation }) => {
             <View style={styles.iconContainer}>
               <Ionicons name="eyedrop" size={45} color="#ffffff" />
             </View>
-            <Text style={styles.buttonText}>{`${
-              dosedToday ? "change today's" : 'add'
-            } dose`}</Text>
+            <Text style={styles.buttonText}>dose</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, (!dosedToday || moodDone) && styles.small]}
@@ -55,9 +53,7 @@ const SelectAdd = ({ navigation }) => {
             <View style={styles.iconContainer}>
               <Ionicons name="heart" size={45} color="#ffffff" />
             </View>
-            <Text style={styles.buttonText}>{`${
-              moodDone ? "change today's" : 'add'
-            } mood`}</Text>
+            <Text style={styles.buttonText}>mood</Text>
           </TouchableOpacity>
         </View>
       </View>

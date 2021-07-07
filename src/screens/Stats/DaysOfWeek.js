@@ -33,7 +33,7 @@ const DaysOfWeek = ({ moods }) => {
     setXAxisData(
       days.map((day, i) => ({
         day,
-        doseAmount: `(${d[i].dataQuantity})`,
+        doseMg: `(${d[i].dataQuantity})`,
       })),
     );
   }, [moods]);

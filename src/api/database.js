@@ -71,6 +71,7 @@ async function addMood(
       ratingsRef,
       {
         ...factorsObj,
+        total: increment,
       },
       { merge: true },
     );
@@ -150,8 +151,9 @@ async function addDose(dose, ogLastDosedAt, symptomNames) {
   const date = new Date(dosedAt);
   const dateString = getDateString(date);
   const userDayRef = userRef.collection('days').doc(dateString);
+  const { measurement, amount, ...doseData } = dose;
 
-  batch.set(userDayRef, dose, { merge: true });
+  batch.set(userDayRef, doseData, { merge: true });
 
   symptomNames.forEach((sName) => {
     const ref = usersRef
@@ -161,7 +163,7 @@ async function addDose(dose, ogLastDosedAt, symptomNames) {
       .collection('days')
       .doc(dateString);
 
-    batch.set(ref, dose, { merge: true });
+    batch.set(ref, doseData, { merge: true });
   });
 
   if (dosedAt > ogLastDosedAt || sameDay(ogLastDosedAt, dosedAt)) {
@@ -171,7 +173,10 @@ async function addDose(dose, ogLastDosedAt, symptomNames) {
         lastDosedAt: dosedAt,
         lastBrand: dose.brand,
         lastProduct: dose.product,
-        lastDoseAmount: dose.doseAmount || '1 drop',
+        lastDoseMg: dose.doseMg,
+        lastMl: dose.ml,
+        lastMg: dose.mg,
+        measurement: dose.measurement,
       },
       { merge: true },
     );
@@ -321,7 +326,7 @@ async function addOnboardInfo(symptoms, cbdDetails) {
     lastMl: cbdDetails.ml,
     lastBrand: cbdDetails.brand,
     lastProduct: cbdDetails.product,
-    lastDoseAmount: cbdDetails.doseAmount,
+    lastDoseMg: cbdDetails.doseMg,
     onboarded: true,
   });
 

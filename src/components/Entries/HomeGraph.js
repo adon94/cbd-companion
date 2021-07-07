@@ -39,12 +39,7 @@ const HomeGraph = ({ moods, navigation }) => {
   if (!showStats) {
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons
-          style={styles.icon}
-          name="journal"
-          size={145}
-          color="#ffffff"
-        />
+        <Ionicons style={styles.icon} name="book" size={145} color="#ffffff" />
         <Text style={styles.titleText}>No entries this week</Text>
         {isDoseToday ? (
           <>

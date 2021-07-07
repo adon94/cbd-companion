@@ -45,7 +45,7 @@ const SingleEntry = ({ route: { params: item }, navigation }) => {
         </View>
         <Header sm>Dosage:</Header>
         <View style={styles.badge}>
-          <Text style={styles.regularText}>{item.doseAmount}ml</Text>
+          <Text style={styles.regularText}>{item.doseMg}ml</Text>
           <Text style={styles.regularText}>{item.product}</Text>
           <Text style={styles.regularText}>{item.brand}</Text>
         </View>

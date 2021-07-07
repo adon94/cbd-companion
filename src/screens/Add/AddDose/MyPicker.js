@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { Picker } from '@react-native-picker/picker';
 
 import Button from '../../../components/Button';
@@ -7,11 +8,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import RatingButton from '../../../components/RatingButton';
 import Header from '../../../components/Header';
 
+import { setMeasurement } from '../../../reducers/doseReducer';
+
 const topColor = '#56ab2f';
 const bottomColor = '#a8e063';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
+
+const measurements = ['mg', 'ml', 'drops'];
 
 const MyPicker = ({
   values,
@@ -21,10 +26,16 @@ const MyPicker = ({
   selectedValue,
   showOption,
 }) => {
-  const [showMeasurement, setShowMeasurement] = useState();
+  const measurement = useSelector((state) => state.dose.last.measurement);
+  const dispatch = useDispatch();
+
   if (!show) {
     return null;
   }
+
+  const onMeasurementSelect = (type) => {
+    dispatch(setMeasurement(type));
+  };
 
   return (
     <LinearGradient colors={[topColor, bottomColor]} style={styles.container}>
@@ -35,19 +46,25 @@ const MyPicker = ({
         <Picker
           itemStyle={styles.itemStyle}
           selectedValue={selectedValue}
-          onValueChange={(itemValue, itemIndex) => setValue(itemValue)}>
-          {values.map((val) => (
-            <Picker.Item key={val} label={val} value={val} />
+          onValueChange={(itemValue, index) => setValue(itemValue, index)}>
+          {values.map((val, index) => (
+            <Picker.Item
+              key={val}
+              label={`${val} ${
+                index === 0 && measurement === 'drops' ? 'drop' : measurement
+              }`}
+              value={val}
+            />
           ))}
         </Picker>
         {showOption && (
           <View style={styles.buttonsContainer}>
-            {['mg', 'ml', 'drops'].map((type) => (
+            {measurements.map((type) => (
               <RatingButton
                 key={type}
-                // active={index + 1 === rating}
+                active={type === measurement}
                 isMeasurement
-                onPress={() => console.log(type)}>
+                onPress={() => onMeasurementSelect(type)}>
                 {type}
               </RatingButton>
             ))}
@@ -57,13 +74,6 @@ const MyPicker = ({
       <Button style={{ marginTop: 'auto' }} onPress={hide}>
         Done
       </Button>
-      {/* <MyPicker
-        values={['Ml', 'Drops', 'Mg']}
-        setValue={(v) => console.log({ v })}
-        show={show}
-        hide={() => setShowMeasurement(false)}
-        selectedValue={'Drops'}
-      /> */}
     </LinearGradient>
   );
 };

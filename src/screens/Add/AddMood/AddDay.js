@@ -31,6 +31,7 @@ import { dateDisplay, isToday } from '../../../core/utils';
 import { getDoseInfo } from '../../../api/database';
 import {
   fetchLifestyle,
+  removeSelections,
   setAllLifestyle,
 } from '../../../reducers/lifestyleReducer';
 
@@ -78,6 +79,9 @@ const AddDay = ({ navigation, route: { params } }) => {
         sendMoods({ symptoms, lifestyleFactors, date }),
       );
       if (resultAction.meta.requestStatus === 'fulfilled') {
+        dispatch(setSelectedDate(new Date().toISOString()));
+        // **TODO** reset selected date and lifestyle selections
+        dispatch(removeSelections());
         dispatch(fetchSymptomsWithMoods());
         navigation.dispatch(
           CommonActions.reset({
@@ -126,7 +130,6 @@ const AddDay = ({ navigation, route: { params } }) => {
     } else {
       setSubmittable(true);
     }
-    console.log(listItems);
   };
 
   const goBack = () => {

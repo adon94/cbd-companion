@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Dimensions } from 'react-native';
 import { BarChart, Grid, YAxis } from 'react-native-svg-charts';
+import { theme } from '../../core/theme';
 import XAxis from './XAxis';
 
 const screenWidth = Dimensions.get('window').width;
 
 const CustomBarChart = ({ data, xAxisData }) => {
-  const fill = '#ffffff99';
+  const fill = theme.colors.accent;
   const contentInset = { top: 20, bottom: 20 };
 
   return (
@@ -33,7 +34,7 @@ const CustomBarChart = ({ data, xAxisData }) => {
           <Grid />
         </BarChart>
 
-        <XAxis data={xAxisData} labels={['day', 'doseAmount']} bar />
+        <XAxis data={xAxisData} labels={['day', 'doseMg']} bar />
       </View>
     </View>
   );

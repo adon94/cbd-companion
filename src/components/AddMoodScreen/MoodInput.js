@@ -6,8 +6,6 @@ import RatingButton from '../RatingButton';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const isBigPhone = windowHeight > 700;
-
 const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle, addRating }) => {
   const [rating, setRating] = useState();
 
@@ -15,7 +13,7 @@ const MoodInput = ({ feels, symptom, setSymptoms, isLifestyle, addRating }) => {
     if (symptom.rating && !rating) {
       setRating(symptom.rating);
     }
-  }, []);
+  }, [symptom.rating, rating]);
 
   const setActive = (r) => {
     if (r === rating) {

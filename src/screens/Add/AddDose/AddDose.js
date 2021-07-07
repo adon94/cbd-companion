@@ -9,7 +9,11 @@ import Button from '../../../components/Button';
 import BackButton from '../../../components/BackButton';
 import MyPicker from './MyPicker';
 
-import { dateTimeDisplay } from '../../../core/utils';
+import {
+  convertFromMg,
+  convertToMg,
+  dateTimeDisplay,
+} from '../../../core/utils';
 import {
   fetchDoseInfo,
   sendDose,
@@ -17,17 +21,20 @@ import {
 } from '../../../reducers/doseReducer';
 import { fetchSymptomsWithMoods } from '../../../reducers/symptomsReducer';
 
-const drops = ['1 drop', '2 drops', '3 drops', '4 drops', '5 drops', '6 drops'];
 const windowWidth = Dimensions.get('window').width;
 
 const AddDose = ({ navigation, route: { params } }) => {
   const dispatch = useDispatch();
   const dose = useSelector((state) => state.dose.doseInfo);
+  const options = useSelector((state) => state.dose.options);
+  const measurement = useSelector((state) => state.dose.last.measurement);
   const [show, setShow] = useState(false);
   const [showDt, setShowDt] = useState(false);
 
-  const setDose = (doseInfo) => {
-    dispatch(setDoseInfo(doseInfo));
+  const { doseMg, mg, ml } = dose;
+
+  const setDose = (doseInfo, index) => {
+    dispatch(setDoseInfo({ ...doseInfo, index }));
   };
 
   const onTimeChange = (selectedTime) => {
@@ -73,6 +80,9 @@ const AddDose = ({ navigation, route: { params } }) => {
     }
   };
 
+  const doseDisplayValue =
+    measurement === 'mg' ? doseMg : convertFromMg(doseMg, measurement, ml, mg);
+
   return (
     <Layout>
       <BackButton onPress={() => goBack()} />
@@ -80,17 +90,20 @@ const AddDose = ({ navigation, route: { params } }) => {
         <Text style={styles.questionText}>Confirm dose</Text>
         <View>
           <Button
-            capitalize
-            style={styles.topButton}
-            onPress={() => setShow(!show)}
-            outlined>
-            {dose.doseAmount || '1 drop'}
-          </Button>
-          <Button
             capitalize={dose.brand != null}
             outlined
             onPress={() => navigation.navigate('AddProduct')}>
             {dose.brand ? `${dose.brand} ${dose.product}` : 'Select a product'}
+          </Button>
+          <Button
+            capitalize
+            style={styles.topButton}
+            onPress={() => setShow(!show)}
+            outlined>
+            {doseDisplayValue}{' '}
+            {dose.doseMg === 1 && measurement === 'drops'
+              ? 'drop'
+              : measurement}
           </Button>
           <Text style={styles.regText}>at</Text>
           <Button outlined capitalize onPress={() => setShowDt(!show)}>
@@ -102,11 +115,20 @@ const AddDose = ({ navigation, route: { params } }) => {
         </Button>
       </View>
       <MyPicker
-        values={drops}
-        setValue={(v) => setDose({ ...dose, doseAmount: v })}
+        values={options[measurement]}
+        setValue={(v, i) =>
+          setDose(
+            {
+              ...dose,
+              doseMg:
+                measurement === 'mg' ? v : convertToMg(v, measurement, ml, mg),
+            },
+            i,
+          )
+        }
         show={show}
         hide={() => setShow(false)}
-        selectedValue={dose.doseAmount || '1 drop'}
+        selectedValue={doseDisplayValue}
         showOption
       />
       <DateTimePickerModal

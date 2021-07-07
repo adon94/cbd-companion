@@ -1,39 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+
 import { getFactorsCountByRating } from '../../api/database';
 
 const LifestyleCorrelation = ({ moods }) => {
+  const viewingSymptom = useSelector((state) => state.viewingSymptom);
+  const symptoms = useSelector((state) => state.symptoms.symptoms);
   const [factors, setFactors] = useState([]);
+  const [total, setTotal] = useState(0);
 
   const convertKey = (str) => {
-    const key = str.split('Did ')[1].split(' today?')[0];
+    const key = str.split('Did you')[1].split(' today?')[0];
     return key.charAt(0).toUpperCase() + key.slice(1);
   };
 
   useEffect(() => {
     async function getData() {
-      const data = await getFactorsCountByRating('5', 'Anxiety Relief');
+      const data = await getFactorsCountByRating(
+        '5',
+        symptoms[viewingSymptom].displayName,
+      );
       const factorsArray = [];
       for (const [key, value] of Object.entries(data)) {
-        factorsArray.push({
-          key: convertKey(key),
-          value,
-        });
-        console.log(`${key.split('Did ')[1].split(' today?')[0]}: ${value}`);
+        if (key !== 'total') {
+          factorsArray.push({
+            key: convertKey(key),
+            value,
+          });
+        } else {
+          setTotal(value);
+        }
       }
       setFactors(factorsArray);
     }
     getData();
-  }, [moods]);
+  }, [moods, viewingSymptom, symptoms]);
 
   return (
     <View>
       <View>
-        <Text style={styles.titleText}>You feel best when:</Text>
+        <Text style={styles.titleText}>You feel best when you:</Text>
         {factors &&
           factors.map(({ key, value }) => (
             <Text key={key} style={styles.factorText}>
-              {key} ({value} times)
+              {key} ({Math.round((value / total) * 100)}%)
             </Text>
           ))}
       </View>

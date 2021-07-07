@@ -34,6 +34,12 @@ const lifestyleReducer = createSlice({
         lifestyle: action.payload,
       };
     },
+    removeSelections: (state) => {
+      return {
+        ...state,
+        lifestyle: state.lifestyle.map(({ rating, ...lf }) => lf),
+      };
+    },
   },
   extraReducers: {
     // fetchSymptoms
@@ -65,6 +71,7 @@ const lifestyleReducer = createSlice({
   },
 });
 
-export const { addLifestyle, setAllLifestyle } = lifestyleReducer.actions;
+export const { addLifestyle, setAllLifestyle, removeSelections } =
+  lifestyleReducer.actions;
 
 export default lifestyleReducer.reducer;

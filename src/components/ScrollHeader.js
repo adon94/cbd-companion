@@ -6,8 +6,6 @@ import Header from './Header';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-console.log(screenHeight);
-
 const HEADER_MAX_HEIGHT = 210;
 const HEADER_MIN_HEIGHT = screenHeight / 10;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
@@ -17,8 +15,6 @@ const ScrollHeader = ({ scrollY, title, header }) => {
   const [containerY, setContainerY] = useState(0);
   const [titleWidth, setTitleWidth] = useState(0);
   const [headerWidth, setHeaderWidth] = useState(0);
-  console.log('containerHeight', containerHeight);
-  console.log('containerY', containerY);
 
   // const scrollY = useRef(new Animated.Value(0)).current;
   // change header title size from 1 to 0.9
@@ -48,7 +44,6 @@ const ScrollHeader = ({ scrollY, title, header }) => {
     <Animated.View
       onLayout={(e) => {
         if (containerHeight === 0) {
-          console.log('y', e.nativeEvent.layout.y);
           setContainerHeight(e.nativeEvent.layout.height);
           setContainerY(e.nativeEvent.layout.y);
         }
@@ -70,7 +65,6 @@ const ScrollHeader = ({ scrollY, title, header }) => {
           style={styles.title}
           onLayout={(e) => {
             if (titleWidth === 0) {
-              console.log(e.nativeEvent.layout.width);
               setTitleWidth(e.nativeEvent.layout.width);
             }
           }}>
@@ -86,7 +80,6 @@ const ScrollHeader = ({ scrollY, title, header }) => {
         ]}>
         <Header
           onLayout={(e) => {
-            console.log('widh', e.nativeEvent.layout.width);
             if (headerWidth === 0) {
               setHeaderWidth(e.nativeEvent.layout.width);
             }
@@ -107,7 +100,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     overflow: 'hidden',
-    // height: HEADER_MAX_HEIGHT,
   },
   textWrapper: {
     alignSelf: 'flex-start',
@@ -117,7 +109,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     width: '0%',
-    // marginTop: 30,
   },
 });
 

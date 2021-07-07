@@ -39,9 +39,9 @@ const MoodChart = ({ moods, average, displayDay }) => {
   //   : moods.map((mood) => timeDisplay(mood.timestamp)); // also this
   let xAxisData;
   if (average && displayDay) {
-    xAxisData = moods.map(({ timestamp, doseAmount }) => ({
+    xAxisData = moods.map(({ timestamp, doseMg }) => ({
       day: getDayName(timestamp),
-      doseAmount: `${doseAmount || 'N/A'}`,
+      doseMg: `${doseMg || 'N/A'}`,
     }));
   } else if (average) {
     xAxisData = moods.map((mood) => ({ day: numericDate(mood.timestamp) }));
@@ -92,7 +92,7 @@ const MoodChart = ({ moods, average, displayDay }) => {
                 <Line />
                 <Decorator />
               </AreaChart>
-              <XAxis data={xAxisData} labels={['day', 'doseAmount']} />
+              <XAxis data={xAxisData} labels={['day', 'doseMg']} />
             </View>
           </ScrollView>
         </View>

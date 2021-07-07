@@ -3,14 +3,14 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { theme } from '../core/theme';
 
-import { isToday, timeDisplay } from '../core/utils';
+import { convertFromMg, isToday, timeDisplay } from '../core/utils';
 
 const DoseInfo = ({ navigation }) => {
   const lastDose = useSelector((state) => state.dose.last);
 
-  const isDoseToday = lastDose.lastDosedAt
-    ? isToday(new Date(lastDose.lastDosedAt))
-    : false;
+  const { measurement, lastDosedAt, lastDoseMg } = lastDose;
+
+  const isDoseToday = lastDosedAt ? isToday(new Date(lastDosedAt)) : false;
 
   const goToDose = () => {
     navigation.navigate('Add', {
@@ -19,15 +19,26 @@ const DoseInfo = ({ navigation }) => {
     });
   };
 
+  const amount =
+    measurement === 'mg'
+      ? lastDoseMg
+      : convertFromMg(
+          lastDoseMg,
+          measurement,
+          lastDose.lastMl,
+          lastDose.lastMg,
+        );
+
   if (isDoseToday) {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Dosed {lastDose.lastDoseAmount}</Text>
+        <Text style={[styles.text, styles.subtitle]}>Last dose:</Text>
         <Text style={styles.text}>
-          of {lastDose.lastBrand} {lastDose.lastProduct}
+          {amount} {lastDose.measurement} of {lastDose.lastBrand}{' '}
+          {lastDose.lastProduct}
         </Text>
         <Text style={styles.text}>
-          today at {timeDisplay(lastDose.lastDosedAt)}.
+          Today at {timeDisplay(lastDose.lastDosedAt)}.
         </Text>
       </View>
     );
@@ -52,6 +63,9 @@ const styles = StyleSheet.create({
   text: {
     color: '#fff',
     fontSize: 16,
+  },
+  subtitle: {
+    fontWeight: 'bold',
   },
 });
 

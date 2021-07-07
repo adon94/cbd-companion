@@ -56,7 +56,6 @@ const symptomsReducer = createSlice({
       };
     },
     setSelectedDate: (state, action) => {
-      console.log('setting');
       return {
         ...state,
         selectedDate: new Date(action.payload).toISOString(),

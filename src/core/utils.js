@@ -147,3 +147,28 @@ export const sameDay = (d1Str, d2Str) => {
     d1.getDate() === d2.getDate()
   );
 };
+
+const dropsToMl = (drops) => drops * 0.05;
+const mlToMg = (doseMl, totalMl, totalMg) => (totalMg / totalMl) * doseMl;
+
+export const convertToMg = (quantity, measurementType, totalMl, totalMg) => {
+  if (measurementType === 'drops') {
+    const ml = dropsToMl(quantity);
+    return mlToMg(ml, totalMl, totalMg);
+  }
+
+  return mlToMg(quantity, totalMl, totalMg);
+};
+
+const mgToMl = (mg, totalMl, totalMg) => (totalMl / totalMg) * mg;
+const mgToDrops = (mg, totalMl, totalMg) => mgToMl(mg, totalMl, totalMg) / 0.05;
+
+export const convertFromMg = (mg, measurementType, totalMl, totalMg) => {
+  if (measurementType === 'mg') {
+    return mg;
+  } else if (measurementType === 'ml') {
+    return mgToMl(mg, totalMl, totalMg);
+  }
+
+  return mgToDrops(mg, totalMl, totalMg);
+};
